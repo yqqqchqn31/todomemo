@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import TaskInput from './components/TaskInput.tsx'
-import TaskList from './components/TaskList.tsx'
+import { TaskInput } from './components/TaskInput.tsx'
+import { TaskList } from './components/TaskList.tsx'
 import { createTask, type Task } from './tasks.ts'
 
 const todayFormatter = new Intl.DateTimeFormat('ja-JP', {
@@ -9,10 +9,10 @@ const todayFormatter = new Intl.DateTimeFormat('ja-JP', {
   weekday: 'short',
 })
 
-export default function App() {
+export const App = () => {
   const [tasks, setTasks] = useState<Task[]>([])
 
-  function addTask(title: string) {
+  const addTask = (title: string) => {
     setTasks((currentTasks) => [...currentTasks, createTask(title)])
   }
 

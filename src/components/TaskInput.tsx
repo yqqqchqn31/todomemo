@@ -1,29 +1,27 @@
 import { useState, type FormEvent, type KeyboardEvent, type PointerEvent } from 'react'
-import ArrowUpIcon from './icons/ArrowUpIcon.tsx'
+import { ArrowUpIcon } from './icons/ArrowUpIcon.tsx'
 
-function keepKeyboardOpen(event: PointerEvent) {
+const keepKeyboardOpen = (event: PointerEvent) => {
   event.preventDefault()
 }
 
-function isConfirmingConversion(event: KeyboardEvent) {
-  // SafariではisComposingがfalseのまま確定のEnterが届くことがあるため、変換中を示すkeyCode 229も見る
-  return event.nativeEvent.isComposing || event.keyCode === 229
-}
+// SafariではisComposingがfalseのまま確定のEnterが届くことがあるため、変換中を示すkeyCode 229も見る
+const isConfirmingConversion = (event: KeyboardEvent) =>
+  event.nativeEvent.isComposing || event.keyCode === 229
 
-function preventSubmitWhileConverting(event: KeyboardEvent) {
-  if (event.key === 'Enter' && isConfirmingConversion(event)) {
-    event.preventDefault()
-  }
+const preventSubmitWhileConverting = (event: KeyboardEvent) => {
+  if (event.key !== 'Enter' || !isConfirmingConversion(event)) return
+  event.preventDefault()
 }
 
 type TaskInputProps = {
   onAdd: (title: string) => void
 }
 
-export default function TaskInput({ onAdd }: TaskInputProps) {
+export const TaskInput = ({ onAdd }: TaskInputProps) => {
   const [text, setText] = useState('')
 
-  function handleSubmit(event: FormEvent) {
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
     const title = text.trim()
     if (title === '') return

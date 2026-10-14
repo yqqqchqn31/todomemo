@@ -5,11 +5,9 @@ export type Task = {
   createdAt: number
 }
 
-export function createTask(title: string): Task {
-  return {
-    id: crypto.randomUUID(),
-    title,
-    done: false,
-    createdAt: Date.now(),
-  }
-}
+export const createTask = (title: string): Task => ({
+  id: crypto.randomUUID(),
+  title,
+  done: false,
+  createdAt: Date.now(),
+})
