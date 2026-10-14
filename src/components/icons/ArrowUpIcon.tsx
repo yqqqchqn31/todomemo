@@ -1,4 +1,8 @@
-export default function ArrowUpIcon({ className }) {
+type ArrowUpIconProps = {
+  className?: string
+}
+
+export default function ArrowUpIcon({ className }: ArrowUpIconProps) {
   return (
     <svg
       viewBox="0 0 24 24"

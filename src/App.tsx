@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import TaskInput from './components/TaskInput.jsx'
-import TaskList from './components/TaskList.jsx'
-import { createTask } from './tasks.js'
+import TaskInput from './components/TaskInput.tsx'
+import TaskList from './components/TaskList.tsx'
+import { createTask, type Task } from './tasks.ts'
 
 const todayFormatter = new Intl.DateTimeFormat('ja-JP', {
   month: 'long',
@@ -10,9 +10,9 @@ const todayFormatter = new Intl.DateTimeFormat('ja-JP', {
 })
 
 export default function App() {
-  const [tasks, setTasks] = useState([])
+  const [tasks, setTasks] = useState<Task[]>([])
 
-  function addTask(title) {
+  function addTask(title: string) {
     setTasks((currentTasks) => [...currentTasks, createTask(title)])
   }
 

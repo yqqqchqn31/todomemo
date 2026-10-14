@@ -1,4 +1,10 @@
-export default function TaskList({ tasks }) {
+import type { Task } from '../tasks.ts'
+
+type TaskListProps = {
+  tasks: Task[]
+}
+
+export default function TaskList({ tasks }: TaskListProps) {
   if (tasks.length === 0) {
     return <p className="text-sm text-content-muted">まだ何もありません。下の欄に書いてみてください。</p>
   }

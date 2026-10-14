@@ -1,24 +1,29 @@
-import { useState } from 'react'
-import ArrowUpIcon from './icons/ArrowUpIcon.jsx'
+import { useState, type FormEvent, type KeyboardEvent, type PointerEvent } from 'react'
+import ArrowUpIcon from './icons/ArrowUpIcon.tsx'
 
-function keepKeyboardOpen(event) {
+function keepKeyboardOpen(event: PointerEvent) {
   event.preventDefault()
 }
 
-function isConfirmingConversion(event) {
+function isConfirmingConversion(event: KeyboardEvent) {
+  // SafariではisComposingがfalseのまま確定のEnterが届くことがあるため、変換中を示すkeyCode 229も見る
   return event.nativeEvent.isComposing || event.keyCode === 229
 }
 
-function preventSubmitWhileConverting(event) {
+function preventSubmitWhileConverting(event: KeyboardEvent) {
   if (event.key === 'Enter' && isConfirmingConversion(event)) {
     event.preventDefault()
   }
 }
 
-export default function TaskInput({ onAdd }) {
+type TaskInputProps = {
+  onAdd: (title: string) => void
+}
+
+export default function TaskInput({ onAdd }: TaskInputProps) {
   const [text, setText] = useState('')
 
-  function handleSubmit(event) {
+  function handleSubmit(event: FormEvent) {
     event.preventDefault()
     const title = text.trim()
     if (title === '') return
