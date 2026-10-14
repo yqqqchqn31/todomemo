@@ -1,20 +1,23 @@
-import type { Task } from '../tasks.ts'
+import { isCompleted, type Task } from '../tasks.ts'
+import { TaskItem } from './TaskItem.tsx'
 
 type TaskListProps = {
   tasks: Task[]
+  onToggleCompleted: (id: string) => void
 }
 
-export const TaskList = ({ tasks }: TaskListProps) => {
+export const TaskList = ({ tasks, onToggleCompleted }: TaskListProps) => {
   if (tasks.length === 0) {
     return <p className="text-sm text-content-muted">まだ何もありません。下の欄に書いてみてください。</p>
   }
 
+  const openTasks = tasks.filter((task) => !isCompleted(task))
+  const completedTasks = tasks.filter(isCompleted)
+
   return (
     <ul>
-      {tasks.map((task) => (
-        <li key={task.id} className="flex min-h-13 items-center border-b border-border py-3 text-lg">
-          <span className="min-w-0 break-words">{task.title}</span>
-        </li>
+      {[...openTasks, ...completedTasks].map((task) => (
+        <TaskItem key={task.id} task={task} onToggleCompleted={onToggleCompleted} />
       ))}
     </ul>
   )

@@ -1,4 +1,4 @@
-import type { Task } from './tasks.ts'
+import { fillMissingFields, type Task } from './tasks.ts'
 
 const STORAGE_KEY = 'todomemo'
 const CURRENT_VERSION = 1
@@ -12,7 +12,7 @@ export const loadTasks = (): Task[] => {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null') as SavedData | null
     if (saved?.version !== CURRENT_VERSION) return []
-    return saved.tasks
+    return saved.tasks.map(fillMissingFields)
   } catch {
     return []
   }

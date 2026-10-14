@@ -9,7 +9,7 @@ const todayFormatter = new Intl.DateTimeFormat('ja-JP', {
 })
 
 export const App = () => {
-  const { tasks, addTask } = useTasks()
+  const { tasks, addTask, toggleCompleted } = useTasks()
 
   return (
     <div className="mx-auto max-w-lg">
@@ -18,7 +18,7 @@ export const App = () => {
         <h1 className="mt-0.5 font-hand text-4xl font-semibold">今日</h1>
       </header>
       <main className="px-5 pt-2 pb-safe-24">
-        <TaskList tasks={tasks} />
+        <TaskList tasks={tasks} onToggleCompleted={toggleCompleted} />
       </main>
       <TaskInput onAdd={addTask} />
     </div>
