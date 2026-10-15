@@ -11,6 +11,7 @@ import { useLabels } from './hooks/useLabels.ts'
 import { useSwipe } from './hooks/useSwipe.ts'
 import { useTabPager } from './hooks/useTabPager.ts'
 import { useToday } from './hooks/useToday.ts'
+import { useVisibleViewport } from './hooks/useVisibleViewport.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
 import { useTaskSheet } from './hooks/useTaskSheet.ts'
 import { createAllTab, createLabelTab, createSomedayTab, createTodayTab, isTabEmpty } from './models/tab.ts'
@@ -33,6 +34,7 @@ export const App = () => {
   } = useTaskActions()
   const { labels, addLabel } = useLabels()
   const today = useToday()
+  useVisibleViewport()
   const { pagerRef, activeIndex, handleScroll, goTo } = useTabPager()
   const { sheetTask, isSheetOpen, openSheet, closeSheet } = useTaskSheet(tasks)
 
@@ -50,7 +52,7 @@ export const App = () => {
   const tabSwipeHandlers = useSwipe({ onSwipeLeft: goToNextTab, onSwipeRight: goToPreviousTab })
 
   return (
-    <div className="mx-auto flex h-dvh max-w-lg flex-col">
+    <div className="fixed inset-x-0 top-(--visible-top,0px) mx-auto flex h-(--visible-height,100dvh) max-w-lg flex-col">
       <header {...tabSwipeHandlers} className="flex-none touch-pan-y px-5 pt-safe-7 pb-2">
         <p className="text-sm text-content-muted">{activeTab.caption}</p>
         <h1 className="mt-0.5 font-hand text-4xl font-semibold">{activeTab.label}</h1>
@@ -67,7 +69,7 @@ export const App = () => {
             id={`panel-${tab.id}`}
             role="tabpanel"
             aria-labelledby={`tab-${tab.id}`}
-            className="w-full flex-none snap-start overflow-y-auto px-5 pt-2 pb-safe-24"
+            className="w-full flex-none snap-start overflow-y-auto px-5 pt-2 pb-4"
           >
             <LeftoverCard
               tasks={tab.leftoverTasks}

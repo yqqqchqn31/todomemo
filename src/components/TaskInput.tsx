@@ -24,7 +24,7 @@ export const TaskInput = ({ onAdd }: TaskInputProps) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="fixed inset-x-0 bottom-0 mx-auto flex max-w-lg gap-2 border-t border-border bg-surface px-3 pt-2.5 pb-safe-3"
+      className="flex flex-none gap-2 border-t border-border bg-surface px-3 pt-2.5 pb-safe-3"
     >
       <label htmlFor="new-task" className="sr-only">
         タスクを書く
