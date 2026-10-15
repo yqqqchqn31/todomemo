@@ -15,7 +15,7 @@ export const SleepingTasks = ({ tasks, labels, onToggleCompleted, onOpen, onRele
 
   return (
     <details className="group mt-6 text-content-muted">
-      <summary className="flex min-h-11 cursor-pointer items-center gap-1 text-sm">
+      <summary className="flex min-h-11 cursor-pointer items-center gap-1 text-sm [&::-webkit-details-marker]:hidden">
         眠っているもの {tasks.length}こ
         <span aria-hidden="true" className="group-open:rotate-90 motion-safe:transition-transform">
           ›

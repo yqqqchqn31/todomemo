@@ -7,7 +7,7 @@ type MoreDetailsProps = {
 
 export const MoreDetails = ({ isInitiallyOpen, children }: MoreDetailsProps) => (
   <details open={isInitiallyOpen} className="group border-t border-border">
-    <summary className="flex min-h-11 cursor-pointer items-center gap-1 text-sm text-content-muted">
+    <summary className="flex min-h-11 cursor-pointer items-center gap-1 text-sm text-content-muted [&::-webkit-details-marker]:hidden">
       くわしく決める
       <span aria-hidden="true" className="group-open:rotate-90 motion-safe:transition-transform">
         ›
