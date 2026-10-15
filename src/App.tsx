@@ -1,8 +1,11 @@
+import { useState } from 'react'
 import { AppToaster } from './components/AppToaster.tsx'
 import { BottomSheet } from './components/BottomSheet.tsx'
 import { EmptyState } from './components/EmptyState.tsx'
 import { LeftoverCard } from './components/LeftoverCard.tsx'
 import { SleepingTasks } from './components/SleepingTasks.tsx'
+import { SortPrompt } from './components/SortPrompt.tsx'
+import { SortSheet } from './components/SortSheet.tsx'
 import { TabBar } from './components/TabBar.tsx'
 import { TaskInput } from './components/TaskInput.tsx'
 import { TaskSections } from './components/TaskSections.tsx'
@@ -16,6 +19,7 @@ import { useVisibleViewport } from './hooks/useVisibleViewport.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
 import { useTaskSheet } from './hooks/useTaskSheet.ts'
 import { createAllTab, createLabelTab, createSomedayTab, createTodayTab, isTabEmpty } from './models/tab.ts'
+import { isSortTarget } from './models/task.ts'
 
 export const App = () => {
   const {
@@ -36,6 +40,7 @@ export const App = () => {
   } = useTaskActions()
   const { labels, addLabel } = useLabels()
   const today = useToday()
+  const [isSorting, setIsSorting] = useState(false)
   useVisibleViewport()
   const { pagerRef, activeIndex, handleScroll, goTo } = useTabPager()
   const { sheetTask, isSheetOpen, openSheet, closeSheet } = useTaskSheet(tasks)
@@ -48,6 +53,7 @@ export const App = () => {
   ]
   const activeTab = tabs[activeIndex]
   const allTabIndex = tabs.findIndex((tab) => tab.id === 'all')
+  const sortTargets = tasks.filter(isSortTarget)
   const lastTabIndex = tabs.length - 1
   const goToNextTab = () => goTo(Math.min(activeIndex + 1, lastTabIndex))
   const goToPreviousTab = () => goTo(Math.max(activeIndex - 1, 0))
@@ -80,6 +86,9 @@ export const App = () => {
               onOpen={openSheet}
               onMoveAll={(destination) => moveAllTasks(tab.leftoverTasks, destination)}
             />
+            {tab.id === 'all' && (
+              <SortPrompt count={sortTargets.length} onStart={() => setIsSorting(true)} />
+            )}
             {isTabEmpty(tab) && <EmptyState message={tab.emptyMessage} isMascotShown={tab.id === 'today'} />}
             <TaskSections
               sections={tab.sections}
@@ -125,6 +134,18 @@ export const App = () => {
               deleteTask(sheetTask)
               closeSheet()
             }}
+          />
+        )}
+      </BottomSheet>
+      <BottomSheet isOpen={isSorting} onClose={() => setIsSorting(false)} label="とりあえずの整理">
+        {isSorting && (
+          <SortSheet
+            tasks={sortTargets}
+            labels={labels}
+            onMove={moveTask}
+            onAttachLabel={attachLabel}
+            onRelease={deleteTask}
+            onClose={() => setIsSorting(false)}
           />
         )}
       </BottomSheet>

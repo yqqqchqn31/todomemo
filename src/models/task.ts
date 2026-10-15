@@ -88,6 +88,8 @@ export const isSomedayTask = (task: Task) =>
 export const isUnsortedTask = (task: Task) =>
   task.plannedDate === null && !task.isSomeday && task.labelIds.length === 0 && isOpenOrCompletedToday(task)
 
+export const isSortTarget = (task: Task) => isUnsortedTask(task) && !isCompleted(task)
+
 export const SLEEP_AFTER_DAYS = 14
 
 export const isSleepingTask = (task: Task, today: Date) =>
