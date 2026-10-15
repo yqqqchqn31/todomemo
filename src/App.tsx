@@ -10,6 +10,7 @@ import { TaskSheet } from './components/task-sheet/TaskSheet.tsx'
 import { useLabels } from './hooks/useLabels.ts'
 import { useSwipe } from './hooks/useSwipe.ts'
 import { useTabPager } from './hooks/useTabPager.ts'
+import { useToday } from './hooks/useToday.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
 import { useTaskSheet } from './hooks/useTaskSheet.ts'
 import { createAllTab, createLabelTab, createSomedayTab, createTodayTab, isTabEmpty } from './models/tab.ts'
@@ -31,10 +32,10 @@ export const App = () => {
     deleteTask,
   } = useTaskActions()
   const { labels, addLabel } = useLabels()
+  const today = useToday()
   const { pagerRef, activeIndex, handleScroll, goTo } = useTabPager()
   const { sheetTask, isSheetOpen, openSheet, closeSheet } = useTaskSheet(tasks)
 
-  const today = new Date()
   const tabs = [
     createTodayTab(tasks, today),
     createAllTab(tasks, labels, today),
