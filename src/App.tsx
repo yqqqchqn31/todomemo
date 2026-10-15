@@ -46,13 +46,11 @@ export const App = () => {
 
   return (
     <div className="mx-auto flex h-dvh max-w-lg flex-col">
-      <div {...tabSwipeHandlers} className="flex-none touch-pan-y">
-        <header className="px-5 pt-safe-7 pb-2">
-          <p className="text-sm text-content-muted">{activeTab.caption}</p>
-          <h1 className="mt-0.5 font-hand text-4xl font-semibold">{activeTab.label}</h1>
-        </header>
-        <TabBar tabs={tabs} activeIndex={activeIndex} onSelect={goTo} />
-      </div>
+      <header {...tabSwipeHandlers} className="flex-none touch-pan-y px-5 pt-safe-7 pb-2">
+        <p className="text-sm text-content-muted">{activeTab.caption}</p>
+        <h1 className="mt-0.5 font-hand text-4xl font-semibold">{activeTab.label}</h1>
+      </header>
+      <TabBar tabs={tabs} activeIndex={activeIndex} onSelect={goTo} />
       <div
         ref={pagerRef}
         onScroll={handleScroll}
