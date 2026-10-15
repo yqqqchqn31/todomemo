@@ -14,5 +14,5 @@ export const useTaskSheet = (tasks: Task[]) => {
 
   const closeSheet = () => setIsOpen(false)
 
-  return { sheetTask, isSheetOpen: isOpen && sheetTask !== undefined, openSheet, closeSheet }
+  return { sheetTask, isSheetOpen: isOpen && sheetTask != null, openSheet, closeSheet }
 }
