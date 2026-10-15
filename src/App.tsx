@@ -1,9 +1,10 @@
+import { toast } from 'sonner'
+import { AppToaster } from './components/AppToaster.tsx'
+import { CompletedToastMessage } from './components/CompletedToastMessage.tsx'
 import { TaskInput } from './components/TaskInput.tsx'
 import { TaskList } from './components/TaskList.tsx'
-import { UndoToast } from './components/UndoToast.tsx'
 import { isCompleted, isCompletedToday, type Task } from './tasks.ts'
 import { useTasks } from './useTasks.ts'
-import { useUndoToast } from './useUndoToast.ts'
 
 const todayFormatter = new Intl.DateTimeFormat('ja-JP', {
   month: 'long',
@@ -13,7 +14,6 @@ const todayFormatter = new Intl.DateTimeFormat('ja-JP', {
 
 export const App = () => {
   const { tasks, addTask, completeTask, reopenTask } = useTasks()
-  const { toast, showToast, closeToast } = useUndoToast()
   const todayTasks = tasks.filter((task) => !isCompleted(task) || isCompletedToday(task))
 
   const toggleCompleted = (task: Task) => {
@@ -23,7 +23,9 @@ export const App = () => {
     }
 
     completeTask(task.id)
-    showToast({ message: `「${task.title}」を完了しました`, undo: () => reopenTask(task.id) })
+    toast(<CompletedToastMessage title={task.title} />, {
+      action: { label: '元に戻す', onClick: () => reopenTask(task.id) },
+    })
   }
 
   return (
@@ -36,7 +38,7 @@ export const App = () => {
         <TaskList tasks={todayTasks} onToggleCompleted={toggleCompleted} />
       </main>
       <TaskInput onAdd={addTask} />
-      {toast && <UndoToast toast={toast} onClose={closeToast} />}
+      <AppToaster />
     </div>
   )
 }
