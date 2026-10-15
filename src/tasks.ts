@@ -1,3 +1,5 @@
+import { isToday } from 'date-fns'
+
 export type Task = {
   id: string
   title: string
@@ -19,3 +21,5 @@ export const createTask = (title: string): Task => ({
 export const fillMissingFields = (savedTask: Task): Task => ({ ...TASK_DEFAULTS, ...savedTask })
 
 export const isCompleted = (task: Task) => task.completedAt !== null
+
+export const isCompletedToday = (task: Task) => task.completedAt !== null && isToday(task.completedAt)
