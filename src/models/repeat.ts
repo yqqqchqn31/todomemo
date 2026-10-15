@@ -1,4 +1,5 @@
-import { addBusinessDays, addDays, getDay, nextDay, parseISO, type Day } from 'date-fns'
+import { addBusinessDays, addDays, format, getDay, nextDay, parseISO, type Day } from 'date-fns'
+import { ja } from 'date-fns/locale'
 
 export const REPEAT_RULES = ['daily', 'weekdays', 'weekly'] as const
 
@@ -16,4 +17,9 @@ export const getNextRepeatDate = (rule: RepeatRule, plannedDate: string | null, 
 
   const weekday = getDay(plannedDate == null ? today : parseISO(plannedDate)) as Day
   return nextDay(today, weekday)
+}
+
+export const describeRepeat = (rule: RepeatRule, plannedDate: string | null) => {
+  if (rule !== 'weekly' || plannedDate == null) return REPEAT_LABEL[rule]
+  return `毎週${format(parseISO(plannedDate), 'E', { locale: ja })}`
 }

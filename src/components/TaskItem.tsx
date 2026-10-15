@@ -3,6 +3,7 @@ import type { Label } from '../models/label.ts'
 import { isCompleted, type Task } from '../models/task.ts'
 import { DueDateLabel } from './DueDateLabel.tsx'
 import { LabelChips } from './LabelChips.tsx'
+import { RepeatLabel } from './RepeatLabel.tsx'
 import { CheckIcon } from './icons/CheckIcon.tsx'
 
 type TaskItemProps = {
@@ -44,6 +45,7 @@ export const TaskItem = ({ task, labels, onToggleCompleted, onOpen }: TaskItemPr
       >
         <span className={task.isHighlighted ? 'bg-marker' : ''}>{task.title}</span>
         <LabelChips labels={taskLabels} />
+        {task.repeat != null && <RepeatLabel repeat={task.repeat} plannedDate={task.plannedDate} />}
         <span
           aria-hidden="true"
           data-swiping={isSwiping}
