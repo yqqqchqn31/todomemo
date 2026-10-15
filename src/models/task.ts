@@ -50,6 +50,12 @@ export const fieldsForToday = (todayKey: string): Partial<Task> => ({ plannedDat
 export const SOMEDAY_FIELDS: Partial<Task> = { plannedDate: null, isSomeday: true }
 export const UNSORTED_FIELDS: Partial<Task> = { plannedDate: null, isSomeday: false }
 
+export const fieldsForDestination = (destination: Destination, todayKey: string) => {
+  if (destination === 'today') return fieldsForToday(todayKey)
+  if (destination === 'someday') return SOMEDAY_FIELDS
+  return UNSORTED_FIELDS
+}
+
 export const isTodayTask = (task: Task, todayKey: string) =>
   task.plannedDate !== null && task.plannedDate <= todayKey && isOpenOrCompletedToday(task)
 
