@@ -9,8 +9,8 @@ export const useTasks = () => {
     saveTasks(tasks)
   }, [tasks])
 
-  const addTask = (title: string) => {
-    setTasks((currentTasks) => [...currentTasks, createTask(title)])
+  const addTask = (title: string, fields: Partial<Task>) => {
+    setTasks((currentTasks) => [...currentTasks, createTask(title, fields)])
   }
 
   const updateTask = (id: string, changes: Partial<Task>) => {
