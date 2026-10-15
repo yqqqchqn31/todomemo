@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { createTask, updateTaskById, type Task } from '../models/task.ts'
+import { createTask, type Task } from '../models/task.ts'
 import { loadTasks, saveTasks } from '../storage/taskStorage.ts'
 
 export const useTasks = () => {
@@ -13,8 +13,8 @@ export const useTasks = () => {
     setTasks((currentTasks) => [...currentTasks, createTask(title, fields)])
   }
 
-  const updateTask = (id: string, changes: Partial<Task>) => {
-    setTasks((currentTasks) => updateTaskById(currentTasks, id, changes))
+  const updateTaskById = (id: string, changes: Partial<Task>) => {
+    setTasks((currentTasks) => currentTasks.map((task) => (task.id === id ? { ...task, ...changes } : task)))
   }
 
   const removeTaskById = (id: string) => {
@@ -25,8 +25,8 @@ export const useTasks = () => {
     setTasks((currentTasks) => [...currentTasks.slice(0, index), task, ...currentTasks.slice(index)])
   }
 
-  const completeTask = (id: string) => updateTask(id, { completedAt: Date.now() })
-  const reopenTask = (id: string) => updateTask(id, { completedAt: null })
+  const completeTaskById = (id: string) => updateTaskById(id, { completedAt: Date.now() })
+  const reopenTaskById = (id: string) => updateTaskById(id, { completedAt: null })
 
-  return { tasks, addTask, updateTask, removeTaskById, restoreTask, completeTask, reopenTask }
+  return { tasks, addTask, updateTaskById, removeTaskById, restoreTask, completeTaskById, reopenTaskById }
 }

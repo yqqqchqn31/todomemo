@@ -16,25 +16,25 @@ const showTaskToast = (task: Task, result: string, undo: () => void) => {
 }
 
 export const useTaskActions = () => {
-  const { tasks, addTask, updateTask, removeTaskById, restoreTask, completeTask, reopenTask } = useTasks()
+  const { tasks, addTask, updateTaskById, removeTaskById, restoreTask, completeTaskById, reopenTaskById } = useTasks()
 
   const toggleCompleted = (task: Task) => {
     if (isCompleted(task)) {
-      reopenTask(task.id)
+      reopenTaskById(task.id)
       return
     }
 
-    completeTask(task.id)
-    showTaskToast(task, 'を完了しました', () => reopenTask(task.id))
+    completeTaskById(task.id)
+    showTaskToast(task, 'を完了しました', () => reopenTaskById(task.id))
   }
 
-  const renameTask = (task: Task, title: string) => updateTask(task.id, { title })
-  const toggleHighlight = (task: Task) => updateTask(task.id, { isHighlighted: !task.isHighlighted })
+  const renameTask = (task: Task, title: string) => updateTaskById(task.id, { title })
+  const toggleHighlight = (task: Task) => updateTaskById(task.id, { isHighlighted: !task.isHighlighted })
 
   const moveTask = (task: Task, destination: Destination) => {
     const previousFields = { plannedDate: task.plannedDate, isSomeday: task.isSomeday }
-    updateTask(task.id, fieldsForDestination(destination, toDateKey(new Date())))
-    showTaskToast(task, MOVED_RESULT[destination], () => updateTask(task.id, previousFields))
+    updateTaskById(task.id, fieldsForDestination(destination, toDateKey(new Date())))
+    showTaskToast(task, MOVED_RESULT[destination], () => updateTaskById(task.id, previousFields))
   }
 
   const deleteTask = (task: Task) => {

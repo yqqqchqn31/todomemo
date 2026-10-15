@@ -31,9 +31,6 @@ export const createTask = (title: string, fields: Partial<Task> = {}): Task => (
 
 export const fillMissingFields = (savedTask: Task): Task => ({ ...TASK_DEFAULTS, ...savedTask })
 
-export const updateTaskById = (tasks: Task[], id: string, changes: Partial<Task>) =>
-  tasks.map((task) => (task.id === id ? { ...task, ...changes } : task))
-
 export const isCompleted = (task: Task) => task.completedAt !== null
 
 export const isCompletedToday = (task: Task) => task.completedAt !== null && isToday(task.completedAt)
