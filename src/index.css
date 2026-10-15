@@ -17,6 +17,14 @@
   body {
     @apply bg-surface text-content bg-dot-grid;
   }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-content;
+  }
+
+  input:focus-visible {
+    @apply outline-none;
+  }
 }
 
 @utility bg-dot-grid {
