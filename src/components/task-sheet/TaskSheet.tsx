@@ -1,4 +1,5 @@
 import { getPlacement, toISODateString, type Destination, type Task } from '../../models/task.ts'
+import { DueDateField } from './DueDateField.tsx'
 import { PlanDateField } from './PlanDateField.tsx'
 import { QuickActions } from './QuickActions.tsx'
 import { TitleField } from './TitleField.tsx'
@@ -9,10 +10,19 @@ type TaskSheetProps = {
   onToggleHighlight: () => void
   onMove: (destination: Destination) => void
   onSchedule: (date: Date) => void
+  onChangeDueDate: (dueDate: string | null) => void
   onDelete: () => void
 }
 
-export const TaskSheet = ({ task, onRename, onToggleHighlight, onMove, onSchedule, onDelete }: TaskSheetProps) => (
+export const TaskSheet = ({
+  task,
+  onRename,
+  onToggleHighlight,
+  onMove,
+  onSchedule,
+  onChangeDueDate,
+  onDelete,
+}: TaskSheetProps) => (
   <div className="flex flex-col gap-4 pb-2">
     <TitleField title={task.title} onRename={onRename} />
     <QuickActions
@@ -22,6 +32,7 @@ export const TaskSheet = ({ task, onRename, onToggleHighlight, onMove, onSchedul
       onMove={onMove}
     />
     <PlanDateField plannedDate={task.plannedDate} onSchedule={onSchedule} />
+    <DueDateField dueDate={task.dueDate} onChangeDueDate={onChangeDueDate} />
     <div className="flex items-center justify-between">
       <button type="button" onClick={onDelete} className="h-11 text-sm text-danger">
         削除

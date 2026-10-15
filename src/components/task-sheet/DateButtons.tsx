@@ -2,7 +2,7 @@ import { parseISO } from 'date-fns'
 
 type DateChoiceButtonProps = {
   label: string
-  subLabel: string
+  subLabel?: string
   isSelected: boolean
   onClick: () => void
 }
@@ -26,7 +26,7 @@ export const DateChoiceButton = ({ label, subLabel, isSelected, onClick }: DateC
     className={`${DATE_BUTTON_CLASS} aria-pressed:border-content aria-pressed:bg-surface`}
   >
     {label}
-    <small className="text-xs text-content-muted">{subLabel}</small>
+    {subLabel && <small className="text-xs text-content-muted">{subLabel}</small>}
   </button>
 )
 

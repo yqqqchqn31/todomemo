@@ -39,6 +39,8 @@ export const useTaskActions = () => {
   const renameTask = (task: Task, title: string) => updateTaskById(task.id, { title })
   const toggleHighlight = (task: Task) => updateTaskById(task.id, { isHighlighted: !task.isHighlighted })
 
+  const changeDueDate = (task: Task, dueDate: string | null) => updateTaskById(task.id, { dueDate })
+
   const relocateTask = (task: Task, fields: Partial<Task>, result: string) => {
     const previousFields = { plannedDate: task.plannedDate, isSomeday: task.isSomeday }
     updateTaskById(task.id, fields)
@@ -57,5 +59,15 @@ export const useTaskActions = () => {
     showTaskToast(task, 'を削除しました', () => restoreTask(task, index))
   }
 
-  return { tasks, addTask, toggleCompleted, renameTask, toggleHighlight, moveTask, scheduleTask, deleteTask }
+  return {
+    tasks,
+    addTask,
+    toggleCompleted,
+    renameTask,
+    toggleHighlight,
+    changeDueDate,
+    moveTask,
+    scheduleTask,
+    deleteTask,
+  }
 }

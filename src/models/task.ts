@@ -6,6 +6,7 @@ export type Task = {
   createdAt: number
   completedAt: number | null
   plannedDate: string | null
+  dueDate: string | null
   isSomeday: boolean
   isHighlighted: boolean
 }
@@ -16,6 +17,7 @@ export type Placement = Destination | 'upcoming'
 const TASK_DEFAULTS = {
   completedAt: null,
   plannedDate: null,
+  dueDate: null,
   isSomeday: false,
   isHighlighted: false,
 } satisfies Partial<Task>
