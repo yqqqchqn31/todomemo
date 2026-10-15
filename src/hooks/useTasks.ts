@@ -20,5 +20,5 @@ export const useTasks = () => {
   const completeTask = (id: string) => updateTask(id, { completedAt: Date.now() })
   const reopenTask = (id: string) => updateTask(id, { completedAt: null })
 
-  return { tasks, addTask, completeTask, reopenTask }
+  return { tasks, addTask, updateTask, completeTask, reopenTask }
 }

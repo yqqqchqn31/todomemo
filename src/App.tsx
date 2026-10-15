@@ -1,14 +1,18 @@
 import { AppToaster } from './components/AppToaster.tsx'
+import { BottomSheet } from './components/BottomSheet.tsx'
 import { TabBar } from './components/TabBar.tsx'
 import { TaskInput } from './components/TaskInput.tsx'
 import { TaskList } from './components/TaskList.tsx'
+import { TaskSheet } from './components/task-sheet/TaskSheet.tsx'
 import { useTabPager } from './hooks/useTabPager.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
+import { useTaskSheet } from './hooks/useTaskSheet.ts'
 import { createSomedayTab, createTodayTab, createUnsortedTab } from './models/tab.ts'
 
 export const App = () => {
-  const { tasks, addTask, toggleCompleted } = useTaskActions()
+  const { tasks, addTask, toggleCompleted, renameTask } = useTaskActions()
   const { pagerRef, activeIndex, handleScroll, goTo } = useTabPager()
+  const { sheetTask, isSheetOpen, openSheet, closeSheet } = useTaskSheet(tasks)
 
   const tabs = [createTodayTab(tasks, new Date()), createUnsortedTab(tasks), createSomedayTab(tasks)]
   const activeTab = tabs[activeIndex]
@@ -33,11 +37,16 @@ export const App = () => {
             aria-labelledby={`tab-${tab.id}`}
             className="w-full flex-none snap-start overflow-y-auto px-5 pt-2 pb-safe-24"
           >
-            <TaskList tasks={tab.tasks} onToggleCompleted={toggleCompleted} />
+            <TaskList tasks={tab.tasks} onToggleCompleted={toggleCompleted} onOpen={openSheet} />
           </section>
         ))}
       </div>
       <TaskInput onAdd={(title) => addTask(title, activeTab.fieldsForNewTask)} />
+      <BottomSheet isOpen={isSheetOpen} onClose={closeSheet} label="タスクのシート">
+        {sheetTask && (
+          <TaskSheet key={sheetTask.id} task={sheetTask} onRename={(title) => renameTask(sheetTask, title)} />
+        )}
+      </BottomSheet>
       <AppToaster />
     </div>
   )

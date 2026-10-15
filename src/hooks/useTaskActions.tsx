@@ -10,7 +10,7 @@ const showTaskToast = (task: Task, result: string, undo: () => void) => {
 }
 
 export const useTaskActions = () => {
-  const { tasks, addTask, completeTask, reopenTask } = useTasks()
+  const { tasks, addTask, updateTask, completeTask, reopenTask } = useTasks()
 
   const toggleCompleted = (task: Task) => {
     if (isCompleted(task)) {
@@ -22,5 +22,7 @@ export const useTaskActions = () => {
     showTaskToast(task, 'を完了しました', () => reopenTask(task.id))
   }
 
-  return { tasks, addTask, toggleCompleted }
+  const renameTask = (task: Task, title: string) => updateTask(task.id, { title })
+
+  return { tasks, addTask, toggleCompleted, renameTask }
 }

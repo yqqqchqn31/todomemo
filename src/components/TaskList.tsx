@@ -4,9 +4,10 @@ import { TaskItem } from './TaskItem.tsx'
 type TaskListProps = {
   tasks: Task[]
   onToggleCompleted: (task: Task) => void
+  onOpen: (task: Task) => void
 }
 
-export const TaskList = ({ tasks, onToggleCompleted }: TaskListProps) => {
+export const TaskList = ({ tasks, onToggleCompleted, onOpen }: TaskListProps) => {
   if (tasks.length === 0) {
     return <p className="text-sm text-content-muted">まだ何もありません。下の欄に書いてみてください。</p>
   }
@@ -17,7 +18,7 @@ export const TaskList = ({ tasks, onToggleCompleted }: TaskListProps) => {
   return (
     <ul>
       {[...openTasks, ...completedTasks].map((task) => (
-        <TaskItem key={task.id} task={task} onToggleCompleted={onToggleCompleted} />
+        <TaskItem key={task.id} task={task} onToggleCompleted={onToggleCompleted} onOpen={onOpen} />
       ))}
     </ul>
   )

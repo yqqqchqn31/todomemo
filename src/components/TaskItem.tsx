@@ -4,13 +4,14 @@ import { CheckIcon } from './icons/CheckIcon.tsx'
 type TaskItemProps = {
   task: Task
   onToggleCompleted: (task: Task) => void
+  onOpen: (task: Task) => void
 }
 
-export const TaskItem = ({ task, onToggleCompleted }: TaskItemProps) => {
+export const TaskItem = ({ task, onToggleCompleted, onOpen }: TaskItemProps) => {
   const isDone = isCompleted(task)
 
   return (
-    <li className="flex min-h-13 items-center gap-1 border-b border-border py-1.5 text-lg">
+    <li className="flex min-h-13 items-center gap-1 border-b border-border text-lg">
       <button
         type="button"
         aria-pressed={isDone}
@@ -26,9 +27,13 @@ export const TaskItem = ({ task, onToggleCompleted }: TaskItemProps) => {
           {isDone && <CheckIcon className="size-3.5" />}
         </span>
       </button>
-      <span className={`min-w-0 break-words ${isDone ? 'text-content-muted line-through' : ''}`}>
+      <button
+        type="button"
+        onClick={() => onOpen(task)}
+        className={`min-w-0 flex-1 self-stretch py-3 text-left break-words ${isDone ? 'text-content-muted line-through' : ''}`}
+      >
         {task.title}
-      </span>
+      </button>
     </li>
   )
 }
