@@ -4,8 +4,8 @@ type TaskToastMessageProps = {
 }
 
 export const TaskToastMessage = ({ title, result }: TaskToastMessageProps) => (
-  <span className="flex min-w-0">
-    <span className="truncate">「{title}</span>
-    <span className="flex-none">」{result}</span>
+  <span className="flex min-w-0 flex-wrap">
+    <span className="max-w-full truncate">「{title}」</span>
+    <span>{result}</span>
   </span>
 )

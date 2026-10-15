@@ -1,6 +1,6 @@
 import { toast } from 'sonner'
 import { TaskToastMessage } from '../components/TaskToastMessage.tsx'
-import { formatMonthDayWeekday } from '../models/dateFormat.ts'
+import { formatShortDate } from '../models/dateFormat.ts'
 import {
   fieldsForDate,
   fieldsForDestination,
@@ -49,7 +49,7 @@ export const useTaskActions = () => {
     relocateTask(task, fieldsForDestination(destination, toDateKey(new Date())), MOVED_RESULT[destination])
 
   const scheduleTask = (task: Task, date: Date) =>
-    relocateTask(task, fieldsForDate(toDateKey(date)), `を${formatMonthDayWeekday(date)}に移しました`)
+    relocateTask(task, fieldsForDate(toDateKey(date)), `を${formatShortDate(date)}に移しました`)
 
   const deleteTask = (task: Task) => {
     const index = tasks.findIndex(({ id }) => id === task.id)
