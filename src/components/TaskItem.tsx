@@ -1,3 +1,4 @@
+import { useStrikeSwipe } from '../hooks/useStrikeSwipe.ts'
 import { isCompleted, type Task } from '../models/task.ts'
 import { DueDateLabel } from './DueDateLabel.tsx'
 import { CheckIcon } from './icons/CheckIcon.tsx'
@@ -10,9 +11,13 @@ type TaskItemProps = {
 
 export const TaskItem = ({ task, onToggleCompleted, onOpen }: TaskItemProps) => {
   const isDone = isCompleted(task)
+  const { progress, isSwiping, swipeHandlers } = useStrikeSwipe({
+    isEnabled: !isDone,
+    onStrike: () => onToggleCompleted(task),
+  })
 
   return (
-    <li className="flex min-h-13 items-center gap-1 border-b border-border text-lg">
+    <li {...swipeHandlers} className="flex min-h-13 touch-pan-y items-center gap-1 border-b border-border text-lg">
       <button
         type="button"
         aria-pressed={isDone}
@@ -31,9 +36,15 @@ export const TaskItem = ({ task, onToggleCompleted, onOpen }: TaskItemProps) => 
       <button
         type="button"
         onClick={() => onOpen(task)}
-        className={`min-w-0 flex-1 self-stretch py-3 text-left break-words ${isDone ? 'text-content-muted line-through' : ''}`}
+        className={`relative min-w-0 flex-1 self-stretch py-3 text-left break-words ${isDone ? 'text-content-muted line-through' : ''}`}
       >
         <span className={task.isHighlighted ? 'bg-marker' : ''}>{task.title}</span>
+        <span
+          aria-hidden="true"
+          data-swiping={isSwiping}
+          style={{ width: `${progress * 100}%` }}
+          className="absolute top-1/2 left-0 h-0.5 rounded-full bg-content data-[swiping=false]:transition-[width]"
+        />
       </button>
       {task.dueDate !== null && !isDone && <DueDateLabel dueDate={task.dueDate} />}
     </li>
