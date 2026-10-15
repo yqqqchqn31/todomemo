@@ -1,4 +1,5 @@
 import type { Label } from '../models/label.ts'
+import { readVersioned, writeVersioned } from './versionedStorage.ts'
 
 const STORAGE_KEY = 'todomemo-labels'
 const CURRENT_VERSION = 1
@@ -8,21 +9,7 @@ type SavedData = {
   labels: Label[]
 }
 
-export const loadLabels = (): Label[] => {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null') as SavedData | null
-    if (saved?.version !== CURRENT_VERSION) return []
-    return saved.labels
-  } catch {
-    return []
-  }
-}
+export const loadLabels = (): Label[] => readVersioned<SavedData>(STORAGE_KEY, CURRENT_VERSION)?.labels ?? []
 
-export const saveLabels = (labels: Label[]) => {
-  const data: SavedData = { version: CURRENT_VERSION, labels }
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch {
-    // 容量不足やプライベートブラウズの制限で保存できなくても、アプリは使い続けられるようにする
-  }
-}
+export const saveLabels = (labels: Label[]) =>
+  writeVersioned<SavedData>(STORAGE_KEY, { version: CURRENT_VERSION, labels })

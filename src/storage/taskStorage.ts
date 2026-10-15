@@ -1,4 +1,5 @@
 import { fillMissingFields, type Task } from '../models/task.ts'
+import { readVersioned, writeVersioned } from './versionedStorage.ts'
 
 const STORAGE_KEY = 'todomemo'
 const CURRENT_VERSION = 1
@@ -8,21 +9,7 @@ type SavedData = {
   tasks: Task[]
 }
 
-export const loadTasks = (): Task[] => {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null') as SavedData | null
-    if (saved?.version !== CURRENT_VERSION) return []
-    return saved.tasks.map(fillMissingFields)
-  } catch {
-    return []
-  }
-}
+export const loadTasks = (): Task[] =>
+  readVersioned<SavedData>(STORAGE_KEY, CURRENT_VERSION)?.tasks.map(fillMissingFields) ?? []
 
-export const saveTasks = (tasks: Task[]) => {
-  const data: SavedData = { version: CURRENT_VERSION, tasks }
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
-  } catch {
-    // 容量不足やプライベートブラウズの制限で保存できなくても、アプリは使い続けられるようにする
-  }
-}
+export const saveTasks = (tasks: Task[]) => writeVersioned<SavedData>(STORAGE_KEY, { version: CURRENT_VERSION, tasks })
