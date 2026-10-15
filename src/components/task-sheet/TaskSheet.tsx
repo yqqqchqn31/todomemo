@@ -1,5 +1,6 @@
 import { getPlacement, toISODateString, type Destination, type Task } from '../../models/task.ts'
 import { DueDateField } from './DueDateField.tsx'
+import { MoreDetails } from './MoreDetails.tsx'
 import { PlanDateField } from './PlanDateField.tsx'
 import { QuickActions } from './QuickActions.tsx'
 import { TitleField } from './TitleField.tsx'
@@ -32,7 +33,9 @@ export const TaskSheet = ({
       onMove={onMove}
     />
     <PlanDateField plannedDate={task.plannedDate} onSchedule={onSchedule} />
-    <DueDateField dueDate={task.dueDate} onChangeDueDate={onChangeDueDate} />
+    <MoreDetails isInitiallyOpen={task.dueDate != null}>
+      <DueDateField dueDate={task.dueDate} onChangeDueDate={onChangeDueDate} />
+    </MoreDetails>
     <div className="flex items-center justify-between">
       <button type="button" onClick={onDelete} className="h-11 text-sm text-danger">
         削除
