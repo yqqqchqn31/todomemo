@@ -5,11 +5,12 @@ import { TaskInput } from './components/TaskInput.tsx'
 import { TaskSections } from './components/TaskSections.tsx'
 import { UpcomingLink } from './components/UpcomingLink.tsx'
 import { TaskSheet } from './components/task-sheet/TaskSheet.tsx'
+import { useLabels } from './hooks/useLabels.ts'
 import { useSwipe } from './hooks/useSwipe.ts'
 import { useTabPager } from './hooks/useTabPager.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
 import { useTaskSheet } from './hooks/useTaskSheet.ts'
-import { createAllTab, createSomedayTab, createTodayTab } from './models/tab.ts'
+import { createAllTab, createLabelTab, createSomedayTab, createTodayTab } from './models/tab.ts'
 
 export const App = () => {
   const {
@@ -23,14 +24,16 @@ export const App = () => {
     scheduleTask,
     deleteTask,
   } = useTaskActions()
+  const { labels } = useLabels()
   const { pagerRef, activeIndex, handleScroll, goTo } = useTabPager()
   const { sheetTask, isSheetOpen, openSheet, closeSheet } = useTaskSheet(tasks)
 
   const today = new Date()
   const tabs = [
     createTodayTab(tasks, today),
-    createAllTab(tasks, today),
+    createAllTab(tasks, labels, today),
     createSomedayTab(tasks),
+    ...labels.map((label) => createLabelTab(tasks, label)),
   ]
   const activeTab = tabs[activeIndex]
   const allTabIndex = tabs.findIndex((tab) => tab.id === 'all')

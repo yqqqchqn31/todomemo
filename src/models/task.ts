@@ -7,6 +7,7 @@ export type Task = {
   completedAt: number | null
   plannedDate: string | null
   dueDate: string | null
+  labelIds: string[]
   isSomeday: boolean
   isHighlighted: boolean
 }
@@ -18,6 +19,7 @@ const TASK_DEFAULTS = {
   completedAt: null,
   plannedDate: null,
   dueDate: null,
+  labelIds: [],
   isSomeday: false,
   isHighlighted: false,
 } satisfies Partial<Task>
@@ -75,7 +77,13 @@ export const isSomedayTask = (task: Task) =>
   task.plannedDate === null && task.isSomeday && isOpenOrCompletedToday(task)
 
 export const isUnsortedTask = (task: Task) =>
-  task.plannedDate === null && !task.isSomeday && isOpenOrCompletedToday(task)
+  task.plannedDate === null && !task.isSomeday && task.labelIds.length === 0 && isOpenOrCompletedToday(task)
+
+export const isLabelTask = (task: Task, labelId: string) =>
+  task.labelIds.includes(labelId) && isOpenOrCompletedToday(task)
+
+export const isLabelOnlyTask = (task: Task, labelId: string) =>
+  task.plannedDate === null && !task.isSomeday && isLabelTask(task, labelId)
 
 export const sortByHighlight = (tasks: Task[]) => [
   ...tasks.filter((task) => task.isHighlighted),

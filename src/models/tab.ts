@@ -1,7 +1,10 @@
 import { formatDayLabel, formatMonthDayWeekday } from './dateFormat.ts'
+import type { Label } from './label.ts'
 import {
   fieldsForDate,
   groupByPlannedDate,
+  isLabelOnlyTask,
+  isLabelTask,
   isSomedayTask,
   isTodayTask,
   isUnsortedTask,
@@ -48,17 +51,22 @@ export const createSomedayTab = (tasks: Task[]): TaskTab => ({
   fieldsForNewTask: SOMEDAY_FIELDS,
 })
 
-export const createAllTab = (tasks: Task[], today: Date): TaskTab => {
+export const createAllTab = (tasks: Task[], labels: Label[], today: Date): TaskTab => {
   const todayString = toISODateString(today)
   const upcomingTasks = tasks.filter((task) => isUpcomingTask(task, todayString))
   const upcomingSections = groupByPlannedDate(upcomingTasks).map((group) => ({
     title: formatDayLabel(group.dateString),
     tasks: group.tasks,
   }))
+  const labelSections = labels.map((label) => ({
+    title: label.name,
+    tasks: tasks.filter((task) => isLabelOnlyTask(task, label.id)),
+  }))
   const sections = [
     { title: 'とりあえず', tasks: tasks.filter(isUnsortedTask) },
     { title: '今日', tasks: tasks.filter((task) => isTodayTask(task, todayString)) },
     ...upcomingSections,
+    ...labelSections,
     { title: 'いつか', tasks: tasks.filter(isSomedayTask) },
   ]
 
@@ -71,3 +79,12 @@ export const createAllTab = (tasks: Task[], today: Date): TaskTab => {
     fieldsForNewTask: UNSORTED_FIELDS,
   }
 }
+
+export const createLabelTab = (tasks: Task[], label: Label): TaskTab => ({
+  id: `label-${label.id}`,
+  label: label.name,
+  caption: 'ラベル',
+  sections: [{ tasks: tasks.filter((task) => isLabelTask(task, label.id)) }],
+  upcomingCount: null,
+  fieldsForNewTask: { ...UNSORTED_FIELDS, labelIds: [label.id] },
+})
