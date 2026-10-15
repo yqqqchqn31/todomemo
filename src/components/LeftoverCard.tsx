@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import type { Label } from '../models/label.ts'
-import type { Destination, Task } from '../models/task.ts'
+import { sortByHighlight, type Destination, type Task } from '../models/task.ts'
 import { TaskList } from './TaskList.tsx'
 
 type LeftoverCardProps = {
@@ -10,10 +11,17 @@ type LeftoverCardProps = {
   onMoveAll: (destination: Destination) => void
 }
 
+const PREVIEW_COUNT = 3
+
 const CARD_BUTTON_CLASS = 'min-h-11 rounded-full px-4 text-sm'
 
 export const LeftoverCard = ({ tasks, labels, onToggleCompleted, onOpen, onMoveAll }: LeftoverCardProps) => {
+  const [isExpanded, setIsExpanded] = useState(false)
   if (tasks.length === 0) return null
+
+  const sortedTasks = sortByHighlight(tasks)
+  const shownTasks = isExpanded ? sortedTasks : sortedTasks.slice(0, PREVIEW_COUNT)
+  const hiddenCount = tasks.length - shownTasks.length
 
   return (
     <section
@@ -21,10 +29,19 @@ export const LeftoverCard = ({ tasks, labels, onToggleCompleted, onOpen, onMoveA
       className="mb-4 rounded-xl border border-border bg-surface-raised px-4 pt-4 pb-3"
     >
       <h2 id="leftover-title" className="font-hand text-xl font-semibold">
-        おはよう。残りが{tasks.length}つあるよ
+        おはよう。残りが{tasks.length}こあるよ
       </h2>
       <p className="mt-1 text-sm text-content-muted">終わらなかった日もあるよね。どうする?</p>
-      <TaskList tasks={tasks} labels={labels} onToggleCompleted={onToggleCompleted} onOpen={onOpen} />
+      <TaskList tasks={shownTasks} labels={labels} onToggleCompleted={onToggleCompleted} onOpen={onOpen} />
+      {hiddenCount > 0 && (
+        <button
+          type="button"
+          onClick={() => setIsExpanded(true)}
+          className="flex min-h-11 items-center text-sm text-content-muted"
+        >
+          ほか{hiddenCount}こも見る
+        </button>
+      )}
       <div className="mt-3 flex gap-2">
         <button
           type="button"
