@@ -10,15 +10,10 @@ type TaskSectionsProps = {
   onOpen: (task: Task) => void
 }
 
-export const TaskSections = ({ sections, labels, onToggleCompleted, onOpen }: TaskSectionsProps) => {
-  if (sections.every((section) => section.tasks.length === 0)) {
-    return <p className="text-sm text-content-muted">まだ何もありません。下の欄に書いてみてください。</p>
-  }
-
-  return sections.map((section, index) => (
+export const TaskSections = ({ sections, labels, onToggleCompleted, onOpen }: TaskSectionsProps) =>
+  sections.map((section, index) => (
     <section key={section.title ?? index}>
       {section.title && <h2 className="mt-4 text-xs text-content-muted">{section.title}</h2>}
       <TaskList tasks={section.tasks} labels={labels} onToggleCompleted={onToggleCompleted} onOpen={onOpen} />
     </section>
   ))
-}

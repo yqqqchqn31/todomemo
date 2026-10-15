@@ -30,6 +30,7 @@ export type TaskTab = {
   labelId: string | null
   leftoverTasks: Task[]
   fieldsForNewTask: Partial<Task>
+  emptyMessage: string
 }
 
 export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
@@ -44,6 +45,7 @@ export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
     labelId: null,
     leftoverTasks: tasks.filter((task) => isLeftoverTask(task, todayString)),
     fieldsForNewTask: fieldsForDate(todayString),
+    emptyMessage: 'ひと休み中',
   }
 }
 
@@ -56,6 +58,7 @@ export const createSomedayTab = (tasks: Task[]): TaskTab => ({
   labelId: null,
   leftoverTasks: [],
   fieldsForNewTask: SOMEDAY_FIELDS,
+  emptyMessage: '急がないものは、なにもなし',
 })
 
 export const createAllTab = (tasks: Task[], labels: Label[], today: Date): TaskTab => {
@@ -89,6 +92,7 @@ export const createAllTab = (tasks: Task[], labels: Label[], today: Date): TaskT
     labelId: null,
     leftoverTasks: [],
     fieldsForNewTask: UNSORTED_FIELDS,
+    emptyMessage: 'ぜんぶ片付いて、すっきり',
   }
 }
 
@@ -101,4 +105,8 @@ export const createLabelTab = (tasks: Task[], label: Label): TaskTab => ({
   labelId: label.id,
   leftoverTasks: [],
   fieldsForNewTask: { ...UNSORTED_FIELDS, labelIds: [label.id] },
+  emptyMessage: 'ここは、すっきり',
 })
+
+export const isTabEmpty = (tab: TaskTab) =>
+  tab.leftoverTasks.length === 0 && tab.sections.every((section) => section.tasks.length === 0)

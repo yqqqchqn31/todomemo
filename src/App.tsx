@@ -1,5 +1,6 @@
 import { AppToaster } from './components/AppToaster.tsx'
 import { BottomSheet } from './components/BottomSheet.tsx'
+import { EmptyState } from './components/EmptyState.tsx'
 import { LeftoverCard } from './components/LeftoverCard.tsx'
 import { TabBar } from './components/TabBar.tsx'
 import { TaskInput } from './components/TaskInput.tsx'
@@ -11,7 +12,7 @@ import { useSwipe } from './hooks/useSwipe.ts'
 import { useTabPager } from './hooks/useTabPager.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
 import { useTaskSheet } from './hooks/useTaskSheet.ts'
-import { createAllTab, createLabelTab, createSomedayTab, createTodayTab } from './models/tab.ts'
+import { createAllTab, createLabelTab, createSomedayTab, createTodayTab, isTabEmpty } from './models/tab.ts'
 
 export const App = () => {
   const {
@@ -74,6 +75,7 @@ export const App = () => {
               onOpen={openSheet}
               onMoveAll={(destination) => moveAllTasks(tab.leftoverTasks, destination)}
             />
+            {isTabEmpty(tab) && <EmptyState message={tab.emptyMessage} isMascotShown={tab.id === 'today'} />}
             <TaskSections
               sections={tab.sections}
               labels={labels.filter((label) => label.id !== tab.labelId)}
