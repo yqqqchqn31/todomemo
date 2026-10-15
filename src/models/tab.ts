@@ -48,7 +48,7 @@ export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
     leftoverTasks: tasks.filter((task) => isLeftoverTask(task, todayString)),
     sleepingTasks: [],
     fieldsForNewTask: fieldsForDate(todayString),
-    emptyMessage: 'ひと休み中',
+    emptyMessage: '今日はなんにもしない〜',
   }
 }
 

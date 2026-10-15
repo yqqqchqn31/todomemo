@@ -29,9 +29,9 @@ export const LeftoverCard = ({ tasks, labels, onToggleCompleted, onOpen, onMoveA
       className="mb-4 rounded-xl border border-border bg-surface-raised px-4 pt-4 pb-3"
     >
       <h2 id="leftover-title" className="font-hand text-xl font-semibold">
-        おはよう。残りが{tasks.length}こあるよ
+        そういえば、これどうする？
       </h2>
-      <p className="mt-1 text-sm text-content-muted">終わらなかった日もあるよね。どうする?</p>
+      <p className="mt-1 text-sm text-content-muted">やる日が過ぎたものが{tasks.length}こあるよ</p>
       <TaskList tasks={shownTasks} labels={labels} onToggleCompleted={onToggleCompleted} onOpen={onOpen} />
       {hiddenCount > 0 && (
         <button
