@@ -76,3 +76,8 @@ export const isSomedayTask = (task: Task) =>
 
 export const isUnsortedTask = (task: Task) =>
   task.plannedDate === null && !task.isSomeday && isOpenOrCompletedToday(task)
+
+export const sortByHighlight = (tasks: Task[]) => [
+  ...tasks.filter((task) => task.isHighlighted),
+  ...tasks.filter((task) => !task.isHighlighted),
+]

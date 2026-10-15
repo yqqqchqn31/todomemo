@@ -1,4 +1,4 @@
-import { isCompleted, type Task } from '../models/task.ts'
+import { isCompleted, sortByHighlight, type Task } from '../models/task.ts'
 import { TaskItem } from './TaskItem.tsx'
 
 type TaskListProps = {
@@ -8,7 +8,7 @@ type TaskListProps = {
 }
 
 export const TaskList = ({ tasks, onToggleCompleted, onOpen }: TaskListProps) => {
-  const openTasks = tasks.filter((task) => !isCompleted(task))
+  const openTasks = sortByHighlight(tasks.filter((task) => !isCompleted(task)))
   const completedTasks = tasks.filter(isCompleted)
 
   return (
