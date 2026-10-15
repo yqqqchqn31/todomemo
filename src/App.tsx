@@ -5,6 +5,7 @@ import { TaskInput } from './components/TaskInput.tsx'
 import { TaskSections } from './components/TaskSections.tsx'
 import { UpcomingLink } from './components/UpcomingLink.tsx'
 import { TaskSheet } from './components/task-sheet/TaskSheet.tsx'
+import { useSwipe } from './hooks/useSwipe.ts'
 import { useTabPager } from './hooks/useTabPager.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
 import { useTaskSheet } from './hooks/useTaskSheet.ts'
@@ -34,18 +35,24 @@ export const App = () => {
   ]
   const activeTab = tabs[activeIndex]
   const allTabIndex = tabs.findIndex((tab) => tab.id === 'all')
+  const lastTabIndex = tabs.length - 1
+  const goToNextTab = () => goTo(Math.min(activeIndex + 1, lastTabIndex))
+  const goToPreviousTab = () => goTo(Math.max(activeIndex - 1, 0))
+  const tabSwipeHandlers = useSwipe({ onSwipeLeft: goToNextTab, onSwipeRight: goToPreviousTab })
 
   return (
     <div className="mx-auto flex h-dvh max-w-lg flex-col">
-      <header className="flex-none px-5 pt-safe-7 pb-2">
-        <p className="text-sm text-content-muted">{activeTab.caption}</p>
-        <h1 className="mt-0.5 font-hand text-4xl font-semibold">{activeTab.label}</h1>
-      </header>
-      <TabBar tabs={tabs} activeIndex={activeIndex} onSelect={goTo} />
+      <div {...tabSwipeHandlers} className="flex-none touch-pan-y">
+        <header className="px-5 pt-safe-7 pb-2">
+          <p className="text-sm text-content-muted">{activeTab.caption}</p>
+          <h1 className="mt-0.5 font-hand text-4xl font-semibold">{activeTab.label}</h1>
+        </header>
+        <TabBar tabs={tabs} activeIndex={activeIndex} onSelect={goTo} />
+      </div>
       <div
         ref={pagerRef}
         onScroll={handleScroll}
-        className="flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none]"
+        className="flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-hidden"
       >
         {tabs.map((tab) => (
           <section
