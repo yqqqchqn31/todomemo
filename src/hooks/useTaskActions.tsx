@@ -1,5 +1,4 @@
-import { toast } from 'sonner'
-import { TaskToastMessage } from '../components/TaskToastMessage.tsx'
+import { showTaskToast, showUndoToast } from '../components/undoToast.tsx'
 import { formatShortDate } from '../models/dateFormat.ts'
 import { getNextRepeatDate, type RepeatRule } from '../models/repeat.ts'
 import {
@@ -19,18 +18,19 @@ const MOVED_RESULT: Record<Destination, string> = {
   unsorted: 'をとりあえずに戻しました',
 }
 
-const showUndoToast = (message: string, undo: () => void) => {
-  toast(message, { action: { label: '元に戻す', onClick: undo } })
-}
-
-const showTaskToast = (task: Task, result: string, undo: () => void) => {
-  toast(<TaskToastMessage title={task.title} result={result} />, {
-    action: { label: '元に戻す', onClick: undo },
-  })
-}
-
 export const useTaskActions = () => {
-  const { tasks, addTask, updateTaskById, removeTaskById, restoreTask, completeTaskById, reopenTaskById } = useTasks()
+  const {
+    tasks,
+    addTask,
+    addTasks,
+    updateTaskById,
+    removeTaskById,
+    removeTasksById,
+    replaceTasks,
+    restoreTask,
+    completeTaskById,
+    reopenTaskById,
+  } = useTasks()
 
   const toggleCompleted = (task: Task) => {
     if (isCompleted(task)) {
@@ -117,6 +117,14 @@ export const useTaskActions = () => {
     )
   }
 
+  const insertSampleTasks = (sampleTasks: Task[], onUndo: () => void) => {
+    addTasks(sampleTasks)
+    showUndoToast('サンプルを入れました', () => {
+      removeTasksById(sampleTasks.map((task) => task.id))
+      onUndo()
+    })
+  }
+
   return {
     tasks,
     addTask,
@@ -132,5 +140,7 @@ export const useTaskActions = () => {
     scheduleTask,
     deleteTask,
     releaseTasks,
+    insertSampleTasks,
+    replaceTasks,
   }
 }

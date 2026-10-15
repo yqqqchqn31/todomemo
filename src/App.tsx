@@ -3,6 +3,7 @@ import { AppToaster } from './components/AppToaster.tsx'
 import { BottomSheet } from './components/BottomSheet.tsx'
 import { EmptyState } from './components/EmptyState.tsx'
 import { LeftoverCard } from './components/LeftoverCard.tsx'
+import { ResetDataButton } from './components/ResetDataButton.tsx'
 import { SleepingTasks } from './components/SleepingTasks.tsx'
 import { SortPrompt } from './components/SortPrompt.tsx'
 import { SortSheet } from './components/SortSheet.tsx'
@@ -10,6 +11,7 @@ import { TabBar } from './components/TabBar.tsx'
 import { TaskInput } from './components/TaskInput.tsx'
 import { TaskSections } from './components/TaskSections.tsx'
 import { UpcomingLink } from './components/UpcomingLink.tsx'
+import { showUndoToast } from './components/undoToast.tsx'
 import { TaskSheet } from './components/task-sheet/TaskSheet.tsx'
 import { useLabels } from './hooks/useLabels.ts'
 import { useSwipe } from './hooks/useSwipe.ts'
@@ -19,6 +21,7 @@ import { useVisibleViewport } from './hooks/useVisibleViewport.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
 import { useTaskSheet } from './hooks/useTaskSheet.ts'
 import { createAllTab, createLabelTab, createSomedayTab, createTodayTab, isTabEmpty } from './models/tab.ts'
+import { createSampleData } from './models/sample.ts'
 import { isSortTarget } from './models/task.ts'
 
 export const App = () => {
@@ -37,8 +40,10 @@ export const App = () => {
     scheduleTask,
     deleteTask,
     releaseTasks,
+    insertSampleTasks,
+    replaceTasks,
   } = useTaskActions()
-  const { labels, addLabel } = useLabels()
+  const { labels, addLabel, addLabels, removeLabelsById, replaceLabels } = useLabels()
   const today = useToday()
   const [isSorting, setIsSorting] = useState(false)
   useVisibleViewport()
@@ -54,6 +59,24 @@ export const App = () => {
   const activeTab = tabs[activeIndex]
   const allTabIndex = tabs.findIndex((tab) => tab.id === 'all')
   const sortTargets = tasks.filter(isSortTarget)
+  const isBrandNew = tasks.length === 0 && labels.length === 0
+
+  const loadSample = () => {
+    const sample = createSampleData(today)
+    addLabels(sample.labels)
+    insertSampleTasks(sample.tasks, () => removeLabelsById(sample.labels.map((label) => label.id)))
+  }
+
+  const resetAll = () => {
+    const previous = { tasks, labels }
+    replaceTasks([])
+    replaceLabels([])
+    goTo(0)
+    showUndoToast('すべて消して、最初の状態に戻しました', () => {
+      replaceTasks(previous.tasks)
+      replaceLabels(previous.labels)
+    })
+  }
   const lastTabIndex = tabs.length - 1
   const goToNextTab = () => goTo(Math.min(activeIndex + 1, lastTabIndex))
   const goToPreviousTab = () => goTo(Math.max(activeIndex - 1, 0))
@@ -89,7 +112,13 @@ export const App = () => {
             {tab.id === 'all' && (
               <SortPrompt count={sortTargets.length} onStart={() => setIsSorting(true)} />
             )}
-            {isTabEmpty(tab) && <EmptyState message={tab.emptyMessage} isMascotShown={tab.id === 'today'} />}
+            {isTabEmpty(tab) && (
+              <EmptyState
+                message={tab.emptyMessage}
+                isMascotShown={tab.id === 'today'}
+                onLoadSample={tab.id === 'today' && isBrandNew ? loadSample : undefined}
+              />
+            )}
             <TaskSections
               sections={tab.sections}
               labels={labels.filter((label) => label.id !== tab.labelId)}
@@ -103,6 +132,7 @@ export const App = () => {
               onOpen={openSheet}
               onRelease={() => releaseTasks(tab.sleepingTasks)}
             />
+            {tab.id === 'all' && !isBrandNew && <ResetDataButton onReset={resetAll} />}
             {tab.upcomingCount != null && (
               <UpcomingLink count={tab.upcomingCount} onClick={() => goTo(allTabIndex)} />
             )}

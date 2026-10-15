@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { createLabel } from '../models/label.ts'
+import { createLabel, type Label } from '../models/label.ts'
 import { loadLabels, saveLabels } from '../storage/labelStorage.ts'
 
 export const useLabels = () => {
@@ -18,5 +18,15 @@ export const useLabels = () => {
     return label
   }
 
-  return { labels, addLabel }
+  const addLabels = (newLabels: Label[]) => {
+    setLabels((currentLabels) => [...currentLabels, ...newLabels])
+  }
+
+  const removeLabelsById = (ids: string[]) => {
+    setLabels((currentLabels) => currentLabels.filter((label) => !ids.includes(label.id)))
+  }
+
+  const replaceLabels = (nextLabels: Label[]) => setLabels(nextLabels)
+
+  return { labels, addLabel, addLabels, removeLabelsById, replaceLabels }
 }

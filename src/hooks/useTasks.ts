@@ -19,6 +19,16 @@ export const useTasks = () => {
     setTasks((currentTasks) => currentTasks.map((task) => (task.id === id ? { ...task, ...changes } : task)))
   }
 
+  const addTasks = (newTasks: Task[]) => {
+    setTasks((currentTasks) => [...currentTasks, ...newTasks])
+  }
+
+  const removeTasksById = (ids: string[]) => {
+    setTasks((currentTasks) => currentTasks.filter((task) => !ids.includes(task.id)))
+  }
+
+  const replaceTasks = (nextTasks: Task[]) => setTasks(nextTasks)
+
   const removeTaskById = (id: string) => {
     setTasks((currentTasks) => currentTasks.filter((task) => task.id !== id))
   }
@@ -30,5 +40,16 @@ export const useTasks = () => {
   const completeTaskById = (id: string) => updateTaskById(id, { completedAt: Date.now() })
   const reopenTaskById = (id: string) => updateTaskById(id, { completedAt: null })
 
-  return { tasks, addTask, updateTaskById, removeTaskById, restoreTask, completeTaskById, reopenTaskById }
+  return {
+    tasks,
+    addTask,
+    addTasks,
+    updateTaskById,
+    removeTaskById,
+    removeTasksById,
+    replaceTasks,
+    restoreTask,
+    completeTaskById,
+    reopenTaskById,
+  }
 }
