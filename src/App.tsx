@@ -3,6 +3,7 @@ import { BottomSheet } from './components/BottomSheet.tsx'
 import { TabBar } from './components/TabBar.tsx'
 import { TaskInput } from './components/TaskInput.tsx'
 import { TaskList } from './components/TaskList.tsx'
+import { UpcomingTasks } from './components/UpcomingTasks.tsx'
 import { TaskSheet } from './components/task-sheet/TaskSheet.tsx'
 import { useTabPager } from './hooks/useTabPager.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
@@ -39,6 +40,9 @@ export const App = () => {
             className="w-full flex-none snap-start overflow-y-auto px-5 pt-2 pb-safe-24"
           >
             <TaskList tasks={tab.tasks} onToggleCompleted={toggleCompleted} onOpen={openSheet} />
+            {tab.upcomingTasks && (
+              <UpcomingTasks tasks={tab.upcomingTasks} onToggleCompleted={toggleCompleted} onOpen={openSheet} />
+            )}
           </section>
         ))}
       </div>

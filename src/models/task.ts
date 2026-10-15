@@ -11,7 +11,7 @@ export type Task = {
 }
 
 export type Destination = 'today' | 'someday' | 'unsorted'
-export type Placement = Destination | 'scheduled'
+export type Placement = Destination | 'upcoming'
 
 const TASK_DEFAULTS = {
   completedAt: null,
@@ -39,7 +39,7 @@ export const isCompletedToday = (task: Task) => task.completedAt !== null && isT
 const isOpenOrCompletedToday = (task: Task) => !isCompleted(task) || isCompletedToday(task)
 
 export const getPlacement = (task: Task, todayKey: string): Placement => {
-  if (task.plannedDate !== null && task.plannedDate > todayKey) return 'scheduled'
+  if (task.plannedDate !== null && task.plannedDate > todayKey) return 'upcoming'
   if (task.plannedDate !== null) return 'today'
   if (task.isSomeday) return 'someday'
   return 'unsorted'
@@ -57,6 +57,14 @@ export const fieldsForDestination = (destination: Destination, todayKey: string)
 
 export const isTodayTask = (task: Task, todayKey: string) =>
   task.plannedDate !== null && task.plannedDate <= todayKey && isOpenOrCompletedToday(task)
+
+export const isUpcomingTask = (task: Task, todayKey: string) =>
+  task.plannedDate !== null && task.plannedDate > todayKey && !isCompleted(task)
+
+export const groupByPlannedDate = (tasks: Task[]) => {
+  const dateKeys = [...new Set(tasks.flatMap((task) => task.plannedDate ?? []))].sort()
+  return dateKeys.map((dateKey) => ({ dateKey, tasks: tasks.filter((task) => task.plannedDate === dateKey) }))
+}
 
 export const isSomedayTask = (task: Task) =>
   task.plannedDate === null && task.isSomeday && isOpenOrCompletedToday(task)

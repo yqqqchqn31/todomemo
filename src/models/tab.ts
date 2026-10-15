@@ -5,6 +5,7 @@ import {
   isSomedayTask,
   isTodayTask,
   isUnsortedTask,
+  isUpcomingTask,
   SOMEDAY_FIELDS,
   toDateKey,
   UNSORTED_FIELDS,
@@ -17,6 +18,7 @@ export type TaskTab = {
   caption: string
   count?: number
   tasks: Task[]
+  upcomingTasks?: Task[]
   fieldsForNewTask: Partial<Task>
 }
 
@@ -28,6 +30,7 @@ export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
     label: '今日',
     caption: formatMonthDayWeekday(today),
     tasks: tasks.filter((task) => isTodayTask(task, todayKey)),
+    upcomingTasks: tasks.filter((task) => isUpcomingTask(task, todayKey)),
     fieldsForNewTask: fieldsForDate(todayKey),
   }
 }
