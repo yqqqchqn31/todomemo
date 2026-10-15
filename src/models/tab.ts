@@ -1,6 +1,16 @@
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
-import { isCompleted, isTodayTask, isUnsortedTask, toDateKey, type Task } from './task.ts'
+import {
+  fieldsForToday,
+  isCompleted,
+  isSomedayTask,
+  isTodayTask,
+  isUnsortedTask,
+  SOMEDAY_FIELDS,
+  toDateKey,
+  UNSORTED_FIELDS,
+  type Task,
+} from './task.ts'
 
 export type TaskTab = {
   id: string
@@ -21,7 +31,7 @@ export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
     label: '今日',
     caption: formatMonthDayWeekday(today),
     tasks: tasks.filter((task) => isTodayTask(task, todayKey)),
-    fieldsForNewTask: { plannedDate: todayKey },
+    fieldsForNewTask: fieldsForToday(todayKey),
   }
 }
 
@@ -34,6 +44,14 @@ export const createUnsortedTab = (tasks: Task[]): TaskTab => {
     caption: '書きっぱなしでOK',
     count: unsortedTasks.filter((task) => !isCompleted(task)).length,
     tasks: unsortedTasks,
-    fieldsForNewTask: { plannedDate: null },
+    fieldsForNewTask: UNSORTED_FIELDS,
   }
 }
+
+export const createSomedayTab = (tasks: Task[]): TaskTab => ({
+  id: 'someday',
+  label: 'いつか',
+  caption: '急がないもの',
+  tasks: tasks.filter(isSomedayTask),
+  fieldsForNewTask: SOMEDAY_FIELDS,
+})

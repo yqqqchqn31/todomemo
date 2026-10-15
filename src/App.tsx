@@ -6,14 +6,14 @@ import { TaskInput } from './components/TaskInput.tsx'
 import { TaskList } from './components/TaskList.tsx'
 import { useTabPager } from './hooks/useTabPager.ts'
 import { useTasks } from './hooks/useTasks.ts'
-import { createTodayTab, createUnsortedTab } from './models/tab.ts'
+import { createSomedayTab, createTodayTab, createUnsortedTab } from './models/tab.ts'
 import { isCompleted, type Task } from './models/task.ts'
 
 export const App = () => {
   const { tasks, addTask, completeTask, reopenTask } = useTasks()
   const { pagerRef, activeIndex, handleScroll, goTo } = useTabPager()
 
-  const tabs = [createTodayTab(tasks, new Date()), createUnsortedTab(tasks)]
+  const tabs = [createTodayTab(tasks, new Date()), createUnsortedTab(tasks), createSomedayTab(tasks)]
   const activeTab = tabs[activeIndex]
 
   const toggleCompleted = (task: Task) => {

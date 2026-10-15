@@ -6,11 +6,15 @@ export type Task = {
   createdAt: number
   completedAt: number | null
   plannedDate: string | null
+  isSomeday: boolean
 }
+
+export type Destination = 'today' | 'someday' | 'unsorted'
 
 const TASK_DEFAULTS = {
   completedAt: null,
   plannedDate: null,
+  isSomeday: false,
 } satisfies Partial<Task>
 
 export const toDateKey = (date: Date) => format(date, 'yyyy-MM-dd')
@@ -34,7 +38,19 @@ export const isCompletedToday = (task: Task) => task.completedAt !== null && isT
 
 const isOpenOrCompletedToday = (task: Task) => !isCompleted(task) || isCompletedToday(task)
 
+export const getDestination = (task: Task): Destination => {
+  if (task.plannedDate !== null) return 'today'
+  if (task.isSomeday) return 'someday'
+  return 'unsorted'
+}
+
+export const fieldsForToday = (todayKey: string): Partial<Task> => ({ plannedDate: todayKey, isSomeday: false })
+export const SOMEDAY_FIELDS: Partial<Task> = { plannedDate: null, isSomeday: true }
+export const UNSORTED_FIELDS: Partial<Task> = { plannedDate: null, isSomeday: false }
+
 export const isTodayTask = (task: Task, todayKey: string) =>
   task.plannedDate !== null && task.plannedDate <= todayKey && isOpenOrCompletedToday(task)
 
-export const isUnsortedTask = (task: Task) => task.plannedDate === null && isOpenOrCompletedToday(task)
+export const isSomedayTask = (task: Task) => getDestination(task) === 'someday' && isOpenOrCompletedToday(task)
+
+export const isUnsortedTask = (task: Task) => getDestination(task) === 'unsorted' && isOpenOrCompletedToday(task)
