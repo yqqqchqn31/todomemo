@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
-import { createTask, updateTaskById, type Task } from './tasks.ts'
-import { loadTasks, saveTasks } from './taskStorage.ts'
+import { createTask, updateTaskById, type Task } from '../models/task.ts'
+import { loadTasks, saveTasks } from '../storage/taskStorage.ts'
 
 export const useTasks = () => {
   const [tasks, setTasks] = useState(loadTasks)

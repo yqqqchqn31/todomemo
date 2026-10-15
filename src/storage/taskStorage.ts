@@ -1,4 +1,4 @@
-import { fillMissingFields, type Task } from './tasks.ts'
+import { fillMissingFields, type Task } from '../models/task.ts'
 
 const STORAGE_KEY = 'todomemo'
 const CURRENT_VERSION = 1

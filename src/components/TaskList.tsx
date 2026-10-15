@@ -1,4 +1,4 @@
-import { isCompleted, type Task } from '../tasks.ts'
+import { isCompleted, type Task } from '../models/task.ts'
 import { TaskItem } from './TaskItem.tsx'
 
 type TaskListProps = {

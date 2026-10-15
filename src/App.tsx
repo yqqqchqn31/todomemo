@@ -1,42 +1,19 @@
-import { format } from 'date-fns'
-import { ja } from 'date-fns/locale'
 import { toast } from 'sonner'
 import { AppToaster } from './components/AppToaster.tsx'
 import { CompletedToastMessage } from './components/CompletedToastMessage.tsx'
 import { TabBar } from './components/TabBar.tsx'
 import { TaskInput } from './components/TaskInput.tsx'
 import { TaskList } from './components/TaskList.tsx'
-import { isCompleted, isTodayTask, isUnsortedTask, toDateKey, type Task } from './tasks.ts'
-import { useTasks } from './useTasks.ts'
-import { useTabPager } from './useTabPager.ts'
-
-const formatMonthDayWeekday = (date: Date) => format(date, 'M月d日(E)', { locale: ja })
+import { useTabPager } from './hooks/useTabPager.ts'
+import { useTasks } from './hooks/useTasks.ts'
+import { createTodayTab, createUnsortedTab } from './models/tab.ts'
+import { isCompleted, type Task } from './models/task.ts'
 
 export const App = () => {
   const { tasks, addTask, completeTask, reopenTask } = useTasks()
   const { pagerRef, activeIndex, handleScroll, goTo } = useTabPager()
 
-  const today = new Date()
-  const todayKey = toDateKey(today)
-  const unsortedTasks = tasks.filter(isUnsortedTask)
-
-  const tabs = [
-    {
-      id: 'today',
-      label: '今日',
-      caption: formatMonthDayWeekday(today),
-      tasks: tasks.filter((task) => isTodayTask(task, todayKey)),
-      fieldsForNewTask: { plannedDate: todayKey },
-    },
-    {
-      id: 'unsorted',
-      label: '未整理',
-      caption: '書きっぱなしでOK',
-      count: unsortedTasks.filter((task) => !isCompleted(task)).length,
-      tasks: unsortedTasks,
-      fieldsForNewTask: { plannedDate: null },
-    },
-  ]
+  const tabs = [createTodayTab(tasks, new Date()), createUnsortedTab(tasks)]
   const activeTab = tabs[activeIndex]
 
   const toggleCompleted = (task: Task) => {

@@ -1,4 +1,4 @@
-import { isCompleted, type Task } from '../tasks.ts'
+import { isCompleted, type Task } from '../models/task.ts'
 import { CheckIcon } from './icons/CheckIcon.tsx'
 
 type TaskItemProps = {
