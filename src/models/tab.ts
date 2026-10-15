@@ -8,6 +8,7 @@ import {
   isLeftoverTask,
   isSomedayTask,
   isTodayTask,
+  isSleepingTask,
   isUnsortedTask,
   isUpcomingTask,
   SOMEDAY_FIELDS,
@@ -29,6 +30,7 @@ export type TaskTab = {
   upcomingCount: number | null
   labelId: string | null
   leftoverTasks: Task[]
+  sleepingTasks: Task[]
   fieldsForNewTask: Partial<Task>
   emptyMessage: string
 }
@@ -44,6 +46,7 @@ export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
     upcomingCount: tasks.filter((task) => isUpcomingTask(task, todayString)).length,
     labelId: null,
     leftoverTasks: tasks.filter((task) => isLeftoverTask(task, todayString)),
+    sleepingTasks: [],
     fieldsForNewTask: fieldsForDate(todayString),
     emptyMessage: 'ひと休み中',
   }
@@ -57,6 +60,7 @@ export const createSomedayTab = (tasks: Task[]): TaskTab => ({
   upcomingCount: null,
   labelId: null,
   leftoverTasks: [],
+  sleepingTasks: [],
   fieldsForNewTask: SOMEDAY_FIELDS,
   emptyMessage: '急がないものは、なにもなし',
 })
@@ -73,7 +77,7 @@ export const createAllTab = (tasks: Task[], labels: Label[], today: Date): TaskT
     tasks: tasks.filter((task) => isLabelOnlyTask(task, label.id)),
   }))
   const sections = [
-    { title: 'とりあえず', tasks: tasks.filter(isUnsortedTask) },
+    { title: 'とりあえず', tasks: tasks.filter((task) => isUnsortedTask(task) && !isSleepingTask(task, today)) },
     {
       title: '今日',
       tasks: tasks.filter((task) => isLeftoverTask(task, todayString) || isTodayTask(task, todayString)),
@@ -91,6 +95,7 @@ export const createAllTab = (tasks: Task[], labels: Label[], today: Date): TaskT
     upcomingCount: null,
     labelId: null,
     leftoverTasks: [],
+    sleepingTasks: tasks.filter((task) => isSleepingTask(task, today)),
     fieldsForNewTask: UNSORTED_FIELDS,
     emptyMessage: 'ぜんぶ片付いて、すっきり',
   }
@@ -104,9 +109,12 @@ export const createLabelTab = (tasks: Task[], label: Label): TaskTab => ({
   upcomingCount: null,
   labelId: label.id,
   leftoverTasks: [],
+  sleepingTasks: [],
   fieldsForNewTask: { ...UNSORTED_FIELDS, labelIds: [label.id] },
   emptyMessage: 'ここは、すっきり',
 })
 
 export const isTabEmpty = (tab: TaskTab) =>
-  tab.leftoverTasks.length === 0 && tab.sections.every((section) => section.tasks.length === 0)
+  tab.leftoverTasks.length === 0 &&
+  tab.sleepingTasks.length === 0 &&
+  tab.sections.every((section) => section.tasks.length === 0)

@@ -2,6 +2,7 @@ import { AppToaster } from './components/AppToaster.tsx'
 import { BottomSheet } from './components/BottomSheet.tsx'
 import { EmptyState } from './components/EmptyState.tsx'
 import { LeftoverCard } from './components/LeftoverCard.tsx'
+import { SleepingTasks } from './components/SleepingTasks.tsx'
 import { TabBar } from './components/TabBar.tsx'
 import { TaskInput } from './components/TaskInput.tsx'
 import { TaskSections } from './components/TaskSections.tsx'
@@ -31,6 +32,7 @@ export const App = () => {
     moveAllTasks,
     scheduleTask,
     deleteTask,
+    releaseTasks,
   } = useTaskActions()
   const { labels, addLabel } = useLabels()
   const today = useToday()
@@ -84,6 +86,13 @@ export const App = () => {
               labels={labels.filter((label) => label.id !== tab.labelId)}
               onToggleCompleted={toggleCompleted}
               onOpen={openSheet}
+            />
+            <SleepingTasks
+              tasks={tab.sleepingTasks}
+              labels={labels}
+              onToggleCompleted={toggleCompleted}
+              onOpen={openSheet}
+              onRelease={() => releaseTasks(tab.sleepingTasks)}
             />
             {tab.upcomingCount != null && (
               <UpcomingLink count={tab.upcomingCount} onClick={() => goTo(allTabIndex)} />

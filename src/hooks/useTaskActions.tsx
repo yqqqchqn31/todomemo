@@ -107,6 +107,16 @@ export const useTaskActions = () => {
     showTaskToast(task, 'を削除しました', () => restoreTask(task, index))
   }
 
+  const releaseTasks = (targetTasks: Task[]) => {
+    const removedEntries = targetTasks
+      .map((task) => ({ task, index: tasks.findIndex(({ id }) => id === task.id) }))
+      .sort((a, b) => a.index - b.index)
+    targetTasks.forEach((task) => removeTaskById(task.id))
+    showUndoToast(`${targetTasks.length}こを手放しました`, () =>
+      removedEntries.forEach(({ task, index }) => restoreTask(task, index)),
+    )
+  }
+
   return {
     tasks,
     addTask,
@@ -121,5 +131,6 @@ export const useTaskActions = () => {
     moveAllTasks,
     scheduleTask,
     deleteTask,
+    releaseTasks,
   }
 }
