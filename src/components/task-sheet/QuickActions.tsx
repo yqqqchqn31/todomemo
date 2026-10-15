@@ -8,7 +8,7 @@ type QuickActionsProps = {
   onMove: (destination: Destination) => void
 }
 
-const QUICK_BUTTON =
+const QUICK_BUTTON_CLASS =
   'flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl border border-border bg-surface-raised text-sm font-bold aria-pressed:border-content'
 
 const DESTINATION_BUTTONS = [
@@ -24,7 +24,7 @@ export const QuickActions = ({ isHighlighted, placement, onToggleHighlight, onMo
         type="button"
         aria-pressed={isHighlighted}
         onClick={onToggleHighlight}
-        className={`${QUICK_BUTTON} aria-pressed:bg-highlight`}
+        className={`${QUICK_BUTTON_CLASS} aria-pressed:bg-highlight`}
       >
         <HighlighterIcon className="size-6" />
         蛍光ペン
@@ -39,7 +39,7 @@ export const QuickActions = ({ isHighlighted, placement, onToggleHighlight, onMo
             type="button"
             aria-pressed={isCurrent}
             onClick={() => onMove(button.destination)}
-            className={`${QUICK_BUTTON} aria-pressed:bg-surface`}
+            className={`${QUICK_BUTTON_CLASS} aria-pressed:bg-surface`}
           >
             {button.label}
             <small className="text-xs font-normal text-content-muted">{isCurrent ? '今ここ' : button.hint}</small>
