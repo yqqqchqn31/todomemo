@@ -29,6 +29,11 @@
 }
 
 @layer base {
+  html:has(dialog[open]),
+  html:has(dialog[open]) body {
+    overscroll-behavior: none;
+  }
+
   body {
     @apply bg-surface text-content bg-dot-grid;
   }
