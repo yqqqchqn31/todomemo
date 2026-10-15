@@ -1,32 +1,17 @@
-import { toast } from 'sonner'
 import { AppToaster } from './components/AppToaster.tsx'
-import { CompletedToastMessage } from './components/CompletedToastMessage.tsx'
 import { TabBar } from './components/TabBar.tsx'
 import { TaskInput } from './components/TaskInput.tsx'
 import { TaskList } from './components/TaskList.tsx'
 import { useTabPager } from './hooks/useTabPager.ts'
-import { useTasks } from './hooks/useTasks.ts'
+import { useTaskActions } from './hooks/useTaskActions.tsx'
 import { createSomedayTab, createTodayTab, createUnsortedTab } from './models/tab.ts'
-import { isCompleted, type Task } from './models/task.ts'
 
 export const App = () => {
-  const { tasks, addTask, completeTask, reopenTask } = useTasks()
+  const { tasks, addTask, toggleCompleted } = useTaskActions()
   const { pagerRef, activeIndex, handleScroll, goTo } = useTabPager()
 
   const tabs = [createTodayTab(tasks, new Date()), createUnsortedTab(tasks), createSomedayTab(tasks)]
   const activeTab = tabs[activeIndex]
-
-  const toggleCompleted = (task: Task) => {
-    if (isCompleted(task)) {
-      reopenTask(task.id)
-      return
-    }
-
-    completeTask(task.id)
-    toast(<CompletedToastMessage title={task.title} />, {
-      action: { label: '元に戻す', onClick: () => reopenTask(task.id) },
-    })
-  }
 
   return (
     <div className="mx-auto flex h-dvh max-w-lg flex-col">
