@@ -1,5 +1,6 @@
 import { AppToaster } from './components/AppToaster.tsx'
 import { BottomSheet } from './components/BottomSheet.tsx'
+import { LeftoverCard } from './components/LeftoverCard.tsx'
 import { TabBar } from './components/TabBar.tsx'
 import { TaskInput } from './components/TaskInput.tsx'
 import { TaskSections } from './components/TaskSections.tsx'
@@ -23,6 +24,7 @@ export const App = () => {
     attachLabel,
     toggleLabel,
     moveTask,
+    moveAllTasks,
     scheduleTask,
     deleteTask,
   } = useTaskActions()
@@ -64,6 +66,13 @@ export const App = () => {
             aria-labelledby={`tab-${tab.id}`}
             className="w-full flex-none snap-start overflow-y-auto px-5 pt-2 pb-safe-24"
           >
+            <LeftoverCard
+              tasks={tab.leftoverTasks}
+              labels={labels}
+              onToggleCompleted={toggleCompleted}
+              onOpen={openSheet}
+              onMoveAll={(destination) => moveAllTasks(tab.leftoverTasks, destination)}
+            />
             <TaskSections
               sections={tab.sections}
               labels={labels.filter((label) => label.id !== tab.labelId)}

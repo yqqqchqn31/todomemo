@@ -5,6 +5,7 @@ import {
   groupByPlannedDate,
   isLabelOnlyTask,
   isLabelTask,
+  isLeftoverTask,
   isSomedayTask,
   isTodayTask,
   isUnsortedTask,
@@ -27,6 +28,7 @@ export type TaskTab = {
   sections: TaskSection[]
   upcomingCount: number | null
   labelId: string | null
+  leftoverTasks: Task[]
   fieldsForNewTask: Partial<Task>
 }
 
@@ -40,6 +42,7 @@ export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
     sections: [{ tasks: tasks.filter((task) => isTodayTask(task, todayString)) }],
     upcomingCount: tasks.filter((task) => isUpcomingTask(task, todayString)).length,
     labelId: null,
+    leftoverTasks: tasks.filter((task) => isLeftoverTask(task, todayString)),
     fieldsForNewTask: fieldsForDate(todayString),
   }
 }
@@ -51,6 +54,7 @@ export const createSomedayTab = (tasks: Task[]): TaskTab => ({
   sections: [{ tasks: tasks.filter(isSomedayTask) }],
   upcomingCount: null,
   labelId: null,
+  leftoverTasks: [],
   fieldsForNewTask: SOMEDAY_FIELDS,
 })
 
@@ -67,7 +71,10 @@ export const createAllTab = (tasks: Task[], labels: Label[], today: Date): TaskT
   }))
   const sections = [
     { title: 'とりあえず', tasks: tasks.filter(isUnsortedTask) },
-    { title: '今日', tasks: tasks.filter((task) => isTodayTask(task, todayString)) },
+    {
+      title: '今日',
+      tasks: tasks.filter((task) => isLeftoverTask(task, todayString) || isTodayTask(task, todayString)),
+    },
     ...upcomingSections,
     ...labelSections,
     { title: 'いつか', tasks: tasks.filter(isSomedayTask) },
@@ -80,6 +87,7 @@ export const createAllTab = (tasks: Task[], labels: Label[], today: Date): TaskT
     sections: sections.filter((section) => section.tasks.length > 0),
     upcomingCount: null,
     labelId: null,
+    leftoverTasks: [],
     fieldsForNewTask: UNSORTED_FIELDS,
   }
 }
@@ -91,5 +99,6 @@ export const createLabelTab = (tasks: Task[], label: Label): TaskTab => ({
   sections: [{ tasks: tasks.filter((task) => isLabelTask(task, label.id)) }],
   upcomingCount: null,
   labelId: label.id,
+  leftoverTasks: [],
   fieldsForNewTask: { ...UNSORTED_FIELDS, labelIds: [label.id] },
 })

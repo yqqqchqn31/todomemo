@@ -17,6 +17,10 @@ const MOVED_RESULT: Record<Destination, string> = {
   unsorted: 'をとりあえずに戻しました',
 }
 
+const showUndoToast = (message: string, undo: () => void) => {
+  toast(message, { action: { label: '元に戻す', onClick: undo } })
+}
+
 const showTaskToast = (task: Task, result: string, undo: () => void) => {
   toast(<TaskToastMessage title={task.title} result={result} />, {
     action: { label: '元に戻す', onClick: undo },
@@ -67,6 +71,15 @@ export const useTaskActions = () => {
   const scheduleTask = (task: Task, date: Date) =>
     relocateTask(task, fieldsForDate(toISODateString(date)), `を${formatShortDate(date)}に移しました`)
 
+  const moveAllTasks = (targetTasks: Task[], destination: Destination) => {
+    const fields = fieldsForDestination(destination, toISODateString(new Date()))
+    targetTasks.forEach((task) => updateTaskById(task.id, fields))
+
+    const undo = () =>
+      targetTasks.forEach((task) => updateTaskById(task.id, { plannedDate: task.plannedDate, isSomeday: task.isSomeday }))
+    showUndoToast(`${targetTasks.length}件${MOVED_RESULT[destination]}`, undo)
+  }
+
   const deleteTask = (task: Task) => {
     const index = tasks.findIndex(({ id }) => id === task.id)
     removeTaskById(task.id)
@@ -83,6 +96,7 @@ export const useTaskActions = () => {
     attachLabel,
     toggleLabel,
     moveTask,
+    moveAllTasks,
     scheduleTask,
     deleteTask,
   }

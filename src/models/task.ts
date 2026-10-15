@@ -59,8 +59,14 @@ export const fieldsForDestination = (destination: Destination, todayString: stri
   return UNSORTED_FIELDS
 }
 
+export const isLeftoverTask = (task: Task, todayString: string) =>
+  task.plannedDate !== null && task.plannedDate < todayString && !isCompleted(task)
+
 export const isTodayTask = (task: Task, todayString: string) =>
-  task.plannedDate !== null && task.plannedDate <= todayString && isOpenOrCompletedToday(task)
+  task.plannedDate !== null &&
+  task.plannedDate <= todayString &&
+  isOpenOrCompletedToday(task) &&
+  !isLeftoverTask(task, todayString)
 
 export const isUpcomingTask = (task: Task, todayString: string) =>
   task.plannedDate !== null && task.plannedDate > todayString && !isCompleted(task)
