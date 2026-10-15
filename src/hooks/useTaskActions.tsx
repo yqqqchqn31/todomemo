@@ -41,6 +41,20 @@ export const useTaskActions = () => {
 
   const changeDueDate = (task: Task, dueDate: string | null) => updateTaskById(task.id, { dueDate })
 
+  const attachLabel = (task: Task, labelId: string) => {
+    if (task.labelIds.includes(labelId)) return
+    updateTaskById(task.id, { labelIds: [...task.labelIds, labelId] })
+  }
+
+  const toggleLabel = (task: Task, labelId: string) => {
+    if (task.labelIds.includes(labelId)) {
+      updateTaskById(task.id, { labelIds: task.labelIds.filter((id) => id !== labelId) })
+      return
+    }
+
+    attachLabel(task, labelId)
+  }
+
   const relocateTask = (task: Task, fields: Partial<Task>, result: string) => {
     const previousFields = { plannedDate: task.plannedDate, isSomeday: task.isSomeday }
     updateTaskById(task.id, fields)
@@ -66,6 +80,8 @@ export const useTaskActions = () => {
     renameTask,
     toggleHighlight,
     changeDueDate,
+    attachLabel,
+    toggleLabel,
     moveTask,
     scheduleTask,
     deleteTask,

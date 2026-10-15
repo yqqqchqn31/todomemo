@@ -20,11 +20,13 @@ export const App = () => {
     renameTask,
     toggleHighlight,
     changeDueDate,
+    attachLabel,
+    toggleLabel,
     moveTask,
     scheduleTask,
     deleteTask,
   } = useTaskActions()
-  const { labels } = useLabels()
+  const { labels, addLabel } = useLabels()
   const { pagerRef, activeIndex, handleScroll, goTo } = useTabPager()
   const { sheetTask, isSheetOpen, openSheet, closeSheet } = useTaskSheet(tasks)
 
@@ -77,6 +79,7 @@ export const App = () => {
           <TaskSheet
             key={sheetTask.id}
             task={sheetTask}
+            labels={labels}
             onRename={(title) => renameTask(sheetTask, title)}
             onToggleHighlight={() => toggleHighlight(sheetTask)}
             onMove={(destination) => {
@@ -88,6 +91,8 @@ export const App = () => {
               closeSheet()
             }}
             onChangeDueDate={(dueDate) => changeDueDate(sheetTask, dueDate)}
+            onToggleLabel={(labelId) => toggleLabel(sheetTask, labelId)}
+            onCreateLabel={(name) => attachLabel(sheetTask, addLabel(name).id)}
             onDelete={() => {
               deleteTask(sheetTask)
               closeSheet()

@@ -1,16 +1,8 @@
-import { useState, type FormEvent, type KeyboardEvent, type PointerEvent } from 'react'
+import { useState, type FormEvent, type PointerEvent } from 'react'
 import { ArrowUpIcon } from './icons/ArrowUpIcon.tsx'
+import { preventSubmitWhileConverting } from './imeGuard.ts'
 
 const keepKeyboardOpen = (event: PointerEvent) => {
-  event.preventDefault()
-}
-
-// SafariではisComposingがfalseのまま確定のEnterが届くことがあるため、変換中を示すkeyCode 229も見る
-const isConfirmingConversion = (event: KeyboardEvent) =>
-  event.nativeEvent.isComposing || event.keyCode === 229
-
-const preventSubmitWhileConverting = (event: KeyboardEvent) => {
-  if (event.key !== 'Enter' || !isConfirmingConversion(event)) return
   event.preventDefault()
 }
 

@@ -1,5 +1,7 @@
+import type { Label } from '../../models/label.ts'
 import { getPlacement, toISODateString, type Destination, type Task } from '../../models/task.ts'
 import { DueDateField } from './DueDateField.tsx'
+import { LabelField } from './LabelField.tsx'
 import { MoreDetails } from './MoreDetails.tsx'
 import { PlanDateField } from './PlanDateField.tsx'
 import { QuickActions } from './QuickActions.tsx'
@@ -7,21 +9,27 @@ import { TitleField } from './TitleField.tsx'
 
 type TaskSheetProps = {
   task: Task
+  labels: Label[]
   onRename: (title: string) => void
   onToggleHighlight: () => void
   onMove: (destination: Destination) => void
   onSchedule: (date: Date) => void
   onChangeDueDate: (dueDate: string | null) => void
+  onToggleLabel: (labelId: string) => void
+  onCreateLabel: (name: string) => void
   onDelete: () => void
 }
 
 export const TaskSheet = ({
   task,
+  labels,
   onRename,
   onToggleHighlight,
   onMove,
   onSchedule,
   onChangeDueDate,
+  onToggleLabel,
+  onCreateLabel,
   onDelete,
 }: TaskSheetProps) => (
   <div className="flex flex-col gap-4 pb-2">
@@ -33,6 +41,7 @@ export const TaskSheet = ({
       onMove={onMove}
     />
     <PlanDateField plannedDate={task.plannedDate} onSchedule={onSchedule} />
+    <LabelField labels={labels} selectedIds={task.labelIds} onToggle={onToggleLabel} onCreate={onCreateLabel} />
     <MoreDetails isInitiallyOpen={task.dueDate != null}>
       <DueDateField dueDate={task.dueDate} onChangeDueDate={onChangeDueDate} />
     </MoreDetails>

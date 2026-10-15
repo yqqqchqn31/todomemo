@@ -10,6 +10,9 @@ export const useLabels = () => {
   }, [labels])
 
   const addLabel = (name: string) => {
+    const existingLabel = labels.find((label) => label.name === name)
+    if (existingLabel != null) return existingLabel
+
     const label = createLabel(name, labels.length)
     setLabels((currentLabels) => [...currentLabels, label])
     return label
