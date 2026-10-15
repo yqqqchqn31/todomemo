@@ -2,6 +2,7 @@ import { useRef, useState, type MouseEvent, type PointerEvent } from 'react'
 
 const DIRECTION_LOCK_PX = 8
 const STRIKE_RATIO = 0.5
+const MIN_STRIKE_DISTANCE_PX = 80
 
 type StrikeSwipeOptions = {
   isEnabled: boolean
@@ -61,7 +62,7 @@ export const useStrikeSwipe = ({ isEnabled, onStrike }: StrikeSwipeOptions) => {
       return
     }
 
-    const strikeDistance = start.width * STRIKE_RATIO
+    const strikeDistance = Math.max(start.width * STRIKE_RATIO, MIN_STRIKE_DISTANCE_PX)
     setProgress(toStrikeProgress(distanceX, strikeDistance))
   }
 

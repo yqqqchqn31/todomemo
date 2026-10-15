@@ -59,7 +59,7 @@ export const App = () => {
       <div
         ref={pagerRef}
         onScroll={handleScroll}
-        className="flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-hidden"
+        className="flex min-h-0 flex-1 snap-x snap-mandatory overflow-x-auto overscroll-x-contain [scrollbar-width:none]"
       >
         {tabs.map((tab) => (
           <section
