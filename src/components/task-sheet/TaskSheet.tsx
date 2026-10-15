@@ -1,4 +1,4 @@
-import { getPlacement, toDateKey, type Destination, type Task } from '../../models/task.ts'
+import { getPlacement, toISODateString, type Destination, type Task } from '../../models/task.ts'
 import { PlanDateField } from './PlanDateField.tsx'
 import { QuickActions } from './QuickActions.tsx'
 import { TitleField } from './TitleField.tsx'
@@ -17,7 +17,7 @@ export const TaskSheet = ({ task, onRename, onToggleHighlight, onMove, onSchedul
     <TitleField title={task.title} onRename={onRename} />
     <QuickActions
       isHighlighted={task.isHighlighted}
-      placement={getPlacement(task, toDateKey(new Date()))}
+      placement={getPlacement(task, toISODateString(new Date()))}
       onToggleHighlight={onToggleHighlight}
       onMove={onMove}
     />

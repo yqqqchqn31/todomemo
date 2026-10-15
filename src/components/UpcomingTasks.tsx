@@ -20,8 +20,8 @@ export const UpcomingTasks = ({ tasks, onToggleCompleted, onOpen }: UpcomingTask
         </span>
       </summary>
       {groupByPlannedDate(tasks).map((group) => (
-        <section key={group.dateKey}>
-          <h2 className="mt-3 text-xs">{formatDayLabel(group.dateKey)}</h2>
+        <section key={group.dateString}>
+          <h2 className="mt-3 text-xs">{formatDayLabel(group.dateString)}</h2>
           <ul>
             {group.tasks.map((task) => (
               <TaskItem key={task.id} task={task} onToggleCompleted={onToggleCompleted} onOpen={onOpen} />

@@ -5,7 +5,7 @@ import {
   fieldsForDate,
   fieldsForDestination,
   isCompleted,
-  toDateKey,
+  toISODateString,
   type Destination,
   type Task,
 } from '../models/task.ts'
@@ -46,10 +46,10 @@ export const useTaskActions = () => {
   }
 
   const moveTask = (task: Task, destination: Destination) =>
-    relocateTask(task, fieldsForDestination(destination, toDateKey(new Date())), MOVED_RESULT[destination])
+    relocateTask(task, fieldsForDestination(destination, toISODateString(new Date())), MOVED_RESULT[destination])
 
   const scheduleTask = (task: Task, date: Date) =>
-    relocateTask(task, fieldsForDate(toDateKey(date)), `を${formatShortDate(date)}に移しました`)
+    relocateTask(task, fieldsForDate(toISODateString(date)), `を${formatShortDate(date)}に移しました`)
 
   const deleteTask = (task: Task) => {
     const index = tasks.findIndex(({ id }) => id === task.id)

@@ -1,6 +1,6 @@
 import { addDays, nextMonday, parseISO } from 'date-fns'
 import { formatShortDate } from '../../models/dateFormat.ts'
-import { toDateKey } from '../../models/task.ts'
+import { toISODateString } from '../../models/task.ts'
 
 type PlanDateFieldProps = {
   plannedDate: string | null
@@ -10,8 +10,8 @@ type PlanDateFieldProps = {
 const DATE_BUTTON =
   'relative flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-surface-raised px-4 text-sm aria-pressed:border-content aria-pressed:bg-surface'
 
-const findCustomDate = (plannedDate: string | null, todayKey: string, choiceKeys: string[]) => {
-  if (plannedDate === null || plannedDate <= todayKey || choiceKeys.includes(plannedDate)) return null
+const findCustomDate = (plannedDate: string | null, todayString: string, choiceDateStrings: string[]) => {
+  if (plannedDate === null || plannedDate <= todayString || choiceDateStrings.includes(plannedDate)) return null
   return plannedDate
 }
 
@@ -22,15 +22,15 @@ const customDateLabel = (customDate: string | null) => {
 
 export const PlanDateField = ({ plannedDate, onSchedule }: PlanDateFieldProps) => {
   const today = new Date()
-  const todayKey = toDateKey(today)
+  const todayString = toISODateString(today)
   const choices = [
     { label: '明日', date: addDays(today, 1) },
     { label: '来週', date: nextMonday(today) },
   ]
   const customDate = findCustomDate(
     plannedDate,
-    todayKey,
-    choices.map(({ date }) => toDateKey(date)),
+    todayString,
+    choices.map(({ date }) => toISODateString(date)),
   )
 
   return (
@@ -41,7 +41,7 @@ export const PlanDateField = ({ plannedDate, onSchedule }: PlanDateFieldProps) =
           <button
             key={label}
             type="button"
-            aria-pressed={toDateKey(date) === plannedDate}
+            aria-pressed={toISODateString(date) === plannedDate}
             onClick={() => onSchedule(date)}
             className={DATE_BUTTON}
           >
@@ -56,7 +56,7 @@ export const PlanDateField = ({ plannedDate, onSchedule }: PlanDateFieldProps) =
           {customDateLabel(customDate)}
           <input
             type="date"
-            min={todayKey}
+            min={todayString}
             value={customDate ?? ''}
             onClick={(event) => event.currentTarget.showPicker()}
             onChange={(event) => {

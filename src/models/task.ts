@@ -20,7 +20,7 @@ const TASK_DEFAULTS = {
   isHighlighted: false,
 } satisfies Partial<Task>
 
-export const toDateKey = (date: Date) => format(date, 'yyyy-MM-dd')
+export const toISODateString = (date: Date) => format(date, 'yyyy-MM-dd')
 
 export const createTask = (title: string, fields: Partial<Task> = {}): Task => ({
   ...TASK_DEFAULTS,
@@ -38,32 +38,35 @@ export const isCompletedToday = (task: Task) => task.completedAt !== null && isT
 
 const isOpenOrCompletedToday = (task: Task) => !isCompleted(task) || isCompletedToday(task)
 
-export const getPlacement = (task: Task, todayKey: string): Placement => {
-  if (task.plannedDate !== null && task.plannedDate > todayKey) return 'upcoming'
+export const getPlacement = (task: Task, todayString: string): Placement => {
+  if (task.plannedDate !== null && task.plannedDate > todayString) return 'upcoming'
   if (task.plannedDate !== null) return 'today'
   if (task.isSomeday) return 'someday'
   return 'unsorted'
 }
 
-export const fieldsForDate = (dateKey: string): Partial<Task> => ({ plannedDate: dateKey, isSomeday: false })
+export const fieldsForDate = (dateString: string): Partial<Task> => ({ plannedDate: dateString, isSomeday: false })
 export const SOMEDAY_FIELDS: Partial<Task> = { plannedDate: null, isSomeday: true }
 export const UNSORTED_FIELDS: Partial<Task> = { plannedDate: null, isSomeday: false }
 
-export const fieldsForDestination = (destination: Destination, todayKey: string) => {
-  if (destination === 'today') return fieldsForDate(todayKey)
+export const fieldsForDestination = (destination: Destination, todayString: string) => {
+  if (destination === 'today') return fieldsForDate(todayString)
   if (destination === 'someday') return SOMEDAY_FIELDS
   return UNSORTED_FIELDS
 }
 
-export const isTodayTask = (task: Task, todayKey: string) =>
-  task.plannedDate !== null && task.plannedDate <= todayKey && isOpenOrCompletedToday(task)
+export const isTodayTask = (task: Task, todayString: string) =>
+  task.plannedDate !== null && task.plannedDate <= todayString && isOpenOrCompletedToday(task)
 
-export const isUpcomingTask = (task: Task, todayKey: string) =>
-  task.plannedDate !== null && task.plannedDate > todayKey && !isCompleted(task)
+export const isUpcomingTask = (task: Task, todayString: string) =>
+  task.plannedDate !== null && task.plannedDate > todayString && !isCompleted(task)
 
 export const groupByPlannedDate = (tasks: Task[]) => {
-  const dateKeys = [...new Set(tasks.flatMap((task) => task.plannedDate ?? []))].sort()
-  return dateKeys.map((dateKey) => ({ dateKey, tasks: tasks.filter((task) => task.plannedDate === dateKey) }))
+  const dateStrings = [...new Set(tasks.flatMap((task) => task.plannedDate ?? []))].sort()
+  return dateStrings.map((dateString) => ({
+    dateString,
+    tasks: tasks.filter((task) => task.plannedDate === dateString),
+  }))
 }
 
 export const isSomedayTask = (task: Task) =>

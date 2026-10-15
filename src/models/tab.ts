@@ -7,7 +7,7 @@ import {
   isUnsortedTask,
   isUpcomingTask,
   SOMEDAY_FIELDS,
-  toDateKey,
+  toISODateString,
   UNSORTED_FIELDS,
   type Task,
 } from './task.ts'
@@ -23,15 +23,15 @@ export type TaskTab = {
 }
 
 export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
-  const todayKey = toDateKey(today)
+  const todayString = toISODateString(today)
 
   return {
     id: 'today',
     label: '今日',
     caption: formatMonthDayWeekday(today),
-    tasks: tasks.filter((task) => isTodayTask(task, todayKey)),
-    upcomingTasks: tasks.filter((task) => isUpcomingTask(task, todayKey)),
-    fieldsForNewTask: fieldsForDate(todayKey),
+    tasks: tasks.filter((task) => isTodayTask(task, todayString)),
+    upcomingTasks: tasks.filter((task) => isUpcomingTask(task, todayString)),
+    fieldsForNewTask: fieldsForDate(todayString),
   }
 }
 
