@@ -11,8 +11,9 @@ const CLOSE_DRAG_PX = 80
 const SLIDE_MS = 250
 const SLIDE_EASING = 'cubic-bezier(0.2, 0.8, 0.2, 1)'
 
+// Safari の ::backdrop は CSS 変数を読めないので、背景の色は content の値を直接書く
 const DIALOG_CLASS =
-  'mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-lg overflow-y-auto overscroll-contain rounded-t-2xl bg-surface-raised px-5 pt-2.5 pb-safe-6 text-content backdrop:bg-content/35'
+  'mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-lg overflow-y-auto overscroll-contain rounded-t-2xl bg-surface-raised px-5 pt-2.5 pb-safe-6 text-content backdrop:bg-[rgb(43_42_39/0.35)]'
 
 const slideDuration = () => (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : SLIDE_MS)
 
