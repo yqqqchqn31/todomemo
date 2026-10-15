@@ -3,7 +3,7 @@ import { CheckIcon } from './icons/CheckIcon.tsx'
 
 type TaskItemProps = {
   task: Task
-  onToggleCompleted: (id: string) => void
+  onToggleCompleted: (task: Task) => void
 }
 
 export const TaskItem = ({ task, onToggleCompleted }: TaskItemProps) => {
@@ -15,7 +15,7 @@ export const TaskItem = ({ task, onToggleCompleted }: TaskItemProps) => {
         type="button"
         aria-pressed={isDone}
         aria-label={`「${task.title}」を完了にする`}
-        onClick={() => onToggleCompleted(task.id)}
+        onClick={() => onToggleCompleted(task)}
         className="flex size-11 flex-none items-center justify-center"
       >
         <span

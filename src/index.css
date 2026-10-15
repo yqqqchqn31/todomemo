@@ -31,3 +31,7 @@
 @utility pb-safe-* {
   padding-bottom: calc(env(safe-area-inset-bottom) + --spacing(--value(integer)));
 }
+
+@utility bottom-safe-* {
+  bottom: calc(env(safe-area-inset-bottom) + --spacing(--value(integer)));
+}

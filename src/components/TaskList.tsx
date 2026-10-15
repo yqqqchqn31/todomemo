@@ -3,7 +3,7 @@ import { TaskItem } from './TaskItem.tsx'
 
 type TaskListProps = {
   tasks: Task[]
-  onToggleCompleted: (id: string) => void
+  onToggleCompleted: (task: Task) => void
 }
 
 export const TaskList = ({ tasks, onToggleCompleted }: TaskListProps) => {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { createTask, isCompleted } from './tasks.ts'
+import { createTask, updateTaskById, type Task } from './tasks.ts'
 import { loadTasks, saveTasks } from './taskStorage.ts'
 
 export const useTasks = () => {
@@ -13,16 +13,12 @@ export const useTasks = () => {
     setTasks((currentTasks) => [...currentTasks, createTask(title)])
   }
 
-  const toggleCompleted = (id: string) => {
-    setTasks((currentTasks) =>
-      currentTasks.map((task) => {
-        if (task.id !== id) return task
-
-        const completedAt = isCompleted(task) ? null : Date.now()
-        return { ...task, completedAt }
-      }),
-    )
+  const updateTask = (id: string, changes: Partial<Task>) => {
+    setTasks((currentTasks) => updateTaskById(currentTasks, id, changes))
   }
 
-  return { tasks, addTask, toggleCompleted }
+  const completeTask = (id: string) => updateTask(id, { completedAt: Date.now() })
+  const reopenTask = (id: string) => updateTask(id, { completedAt: null })
+
+  return { tasks, addTask, completeTask, reopenTask }
 }
