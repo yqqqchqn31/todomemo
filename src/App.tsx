@@ -58,7 +58,7 @@ export const App = () => {
   ]
   const activeTab = tabs[activeIndex]
   const allTabIndex = tabs.findIndex((tab) => tab.id === 'all')
-  const sortTargets = tasks.filter(isSortTarget)
+  const sortTargets = tasks.filter((task) => isSortTarget(task, today))
   const isBrandNew = tasks.length === 0 && labels.length === 0
 
   const loadSample = () => {

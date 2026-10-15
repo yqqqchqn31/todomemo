@@ -88,12 +88,13 @@ export const isSomedayTask = (task: Task) =>
 export const isUnsortedTask = (task: Task) =>
   task.plannedDate === null && !task.isSomeday && task.labelIds.length === 0 && isOpenOrCompletedToday(task)
 
-export const isSortTarget = (task: Task) => isUnsortedTask(task) && !isCompleted(task)
-
 export const SLEEP_AFTER_DAYS = 14
 
 export const isSleepingTask = (task: Task, today: Date) =>
   isUnsortedTask(task) && !isCompleted(task) && differenceInCalendarDays(today, task.createdAt) >= SLEEP_AFTER_DAYS
+
+export const isSortTarget = (task: Task, today: Date) =>
+  isUnsortedTask(task) && !isCompleted(task) && !isSleepingTask(task, today)
 
 export const isLabelTask = (task: Task, labelId: string) =>
   task.labelIds.includes(labelId) && isOpenOrCompletedToday(task)
