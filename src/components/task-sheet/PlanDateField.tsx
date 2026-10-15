@@ -1,14 +1,12 @@
 import { addDays, nextMonday, parseISO } from 'date-fns'
 import { formatShortDate } from '../../models/dateFormat.ts'
 import { toISODateString } from '../../models/task.ts'
+import { DateChoiceButton, DateInputButton } from './DateButtons.tsx'
 
 type PlanDateFieldProps = {
   plannedDate: string | null
   onSchedule: (date: Date) => void
 }
-
-const DATE_BUTTON =
-  'relative flex min-h-11 items-center gap-1.5 rounded-full border border-border bg-surface-raised px-4 text-sm aria-pressed:border-content aria-pressed:bg-surface'
 
 const findCustomDate = (plannedDate: string | null, todayString: string, choiceDateStrings: string[]) => {
   if (plannedDate === null || plannedDate <= todayString || choiceDateStrings.includes(plannedDate)) return null
@@ -38,34 +36,21 @@ export const PlanDateField = ({ plannedDate, onSchedule }: PlanDateFieldProps) =
       <h2 className="mb-2 text-xs text-content-muted">いつやる?</h2>
       <div className="flex flex-wrap gap-2">
         {choices.map(({ label, date }) => (
-          <button
+          <DateChoiceButton
             key={label}
-            type="button"
-            aria-pressed={toISODateString(date) === plannedDate}
+            label={label}
+            subLabel={formatShortDate(date)}
+            isSelected={toISODateString(date) === plannedDate}
             onClick={() => onSchedule(date)}
-            className={DATE_BUTTON}
-          >
-            {label}
-            <small className="text-xs text-content-muted">{formatShortDate(date)}</small>
-          </button>
-        ))}
-        <label
-          data-selected={customDate !== null}
-          className={`${DATE_BUTTON} data-[selected=true]:border-content data-[selected=true]:bg-surface`}
-        >
-          {customDateLabel(customDate)}
-          <input
-            type="date"
-            min={todayString}
-            value={customDate ?? ''}
-            onClick={(event) => event.currentTarget.showPicker()}
-            onChange={(event) => {
-              if (event.target.value === '') return
-              onSchedule(parseISO(event.target.value))
-            }}
-            className="absolute inset-0 opacity-0"
           />
-        </label>
+        ))}
+        <DateInputButton
+          label={customDateLabel(customDate)}
+          isSelected={customDate !== null}
+          min={todayString}
+          value={customDate}
+          onPick={onSchedule}
+        />
       </div>
     </section>
   )
