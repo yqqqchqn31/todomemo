@@ -9,7 +9,7 @@ import { useSwipe } from './hooks/useSwipe.ts'
 import { useTabPager } from './hooks/useTabPager.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
 import { useTaskSheet } from './hooks/useTaskSheet.ts'
-import { createAllTab, createSomedayTab, createTodayTab, createUnsortedTab } from './models/tab.ts'
+import { createAllTab, createSomedayTab, createTodayTab } from './models/tab.ts'
 
 export const App = () => {
   const {
@@ -29,9 +29,8 @@ export const App = () => {
   const today = new Date()
   const tabs = [
     createTodayTab(tasks, today),
-    createUnsortedTab(tasks),
-    createSomedayTab(tasks),
     createAllTab(tasks, today),
+    createSomedayTab(tasks),
   ]
   const activeTab = tabs[activeIndex]
   const allTabIndex = tabs.findIndex((tab) => tab.id === 'all')

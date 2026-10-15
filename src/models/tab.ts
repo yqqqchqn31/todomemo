@@ -2,7 +2,6 @@ import { formatDayLabel, formatMonthDayWeekday } from './dateFormat.ts'
 import {
   fieldsForDate,
   groupByPlannedDate,
-  isCompleted,
   isSomedayTask,
   isTodayTask,
   isUnsortedTask,
@@ -22,7 +21,6 @@ export type TaskTab = {
   id: string
   label: string
   caption: string
-  count?: number
   sections: TaskSection[]
   upcomingCount: number | null
   fieldsForNewTask: Partial<Task>
@@ -38,20 +36,6 @@ export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
     sections: [{ tasks: tasks.filter((task) => isTodayTask(task, todayString)) }],
     upcomingCount: tasks.filter((task) => isUpcomingTask(task, todayString)).length,
     fieldsForNewTask: fieldsForDate(todayString),
-  }
-}
-
-export const createUnsortedTab = (tasks: Task[]): TaskTab => {
-  const unsortedTasks = tasks.filter(isUnsortedTask)
-
-  return {
-    id: 'unsorted',
-    label: '未整理',
-    caption: '書きっぱなしでOK',
-    count: unsortedTasks.filter((task) => !isCompleted(task)).length,
-    sections: [{ tasks: unsortedTasks }],
-    upcomingCount: null,
-    fieldsForNewTask: UNSORTED_FIELDS,
   }
 }
 
@@ -72,9 +56,9 @@ export const createAllTab = (tasks: Task[], today: Date): TaskTab => {
     tasks: group.tasks,
   }))
   const sections = [
+    { title: 'とりあえず', tasks: tasks.filter(isUnsortedTask) },
     { title: '今日', tasks: tasks.filter((task) => isTodayTask(task, todayString)) },
     ...upcomingSections,
-    { title: '未整理', tasks: tasks.filter(isUnsortedTask) },
     { title: 'いつか', tasks: tasks.filter(isSomedayTask) },
   ]
 

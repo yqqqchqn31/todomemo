@@ -49,7 +49,7 @@ export const QuickActions = ({ isHighlighted, placement, onToggleHighlight, onMo
     </div>
     {placement !== 'unsorted' && (
       <button type="button" onClick={() => onMove('unsorted')} className="mt-1 h-11 text-sm text-content-muted underline">
-        未整理に戻す
+        とりあえずに戻す
       </button>
     )}
   </section>

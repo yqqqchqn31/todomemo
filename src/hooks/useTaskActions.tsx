@@ -14,7 +14,7 @@ import { useTasks } from './useTasks.ts'
 const MOVED_RESULT: Record<Destination, string> = {
   today: 'を今日に移しました',
   someday: 'をいつかに移しました',
-  unsorted: 'を未整理に戻しました',
+  unsorted: 'をとりあえずに戻しました',
 }
 
 const showTaskToast = (task: Task, result: string, undo: () => void) => {

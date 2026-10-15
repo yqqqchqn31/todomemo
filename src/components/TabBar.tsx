@@ -1,7 +1,6 @@
 export type Tab = {
   id: string
   label: string
-  count?: number
 }
 
 type TabBarProps = {
@@ -24,14 +23,11 @@ export const TabBar = ({ tabs, activeIndex, onSelect }: TabBarProps) => (
           aria-selected={isActive}
           aria-controls={`panel-${tab.id}`}
           onClick={() => onSelect(index)}
-          className={`flex h-11 items-center gap-1.5 border-b-3 px-2 ${
+          className={`flex h-11 items-center border-b-3 px-2 ${
             isActive ? 'border-highlight font-bold text-content' : 'border-transparent text-content-muted'
           }`}
         >
           {tab.label}
-          {tab.count ? (
-            <span className="rounded-full bg-border px-1.5 text-xs font-normal text-content-muted">{tab.count}</span>
-          ) : null}
         </button>
       )
     })}
