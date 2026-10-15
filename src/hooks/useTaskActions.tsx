@@ -1,10 +1,11 @@
 import { toast } from 'sonner'
 import { TaskToastMessage } from '../components/TaskToastMessage.tsx'
 import { formatShortDate } from '../models/dateFormat.ts'
-import type { RepeatRule } from '../models/repeat.ts'
+import { getNextRepeatDate, type RepeatRule } from '../models/repeat.ts'
 import {
   fieldsForDate,
   fieldsForDestination,
+  fieldsForNextRepeat,
   isCompleted,
   toISODateString,
   type Destination,
@@ -38,7 +39,17 @@ export const useTaskActions = () => {
     }
 
     completeTaskById(task.id)
-    showTaskToast(task, 'を完了しました', () => reopenTaskById(task.id))
+    if (task.repeat == null) {
+      showTaskToast(task, 'を完了しました', () => reopenTaskById(task.id))
+      return
+    }
+
+    const nextDate = getNextRepeatDate(task.repeat, task.plannedDate, new Date())
+    const nextTask = addTask(task.title, fieldsForNextRepeat(task, nextDate))
+    showTaskToast(task, `を完了しました。次は${formatShortDate(nextDate)}`, () => {
+      reopenTaskById(task.id)
+      removeTaskById(nextTask.id)
+    })
   }
 
   const renameTask = (task: Task, title: string) => updateTaskById(task.id, { title })

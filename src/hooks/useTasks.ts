@@ -10,7 +10,9 @@ export const useTasks = () => {
   }, [tasks])
 
   const addTask = (title: string, fields: Partial<Task>) => {
-    setTasks((currentTasks) => [...currentTasks, createTask(title, fields)])
+    const task = createTask(title, fields)
+    setTasks((currentTasks) => [...currentTasks, task])
+    return task
   }
 
   const updateTaskById = (id: string, changes: Partial<Task>) => {

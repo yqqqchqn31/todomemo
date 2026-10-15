@@ -98,3 +98,10 @@ export const sortByHighlight = (tasks: Task[]) => [
   ...tasks.filter((task) => task.isHighlighted),
   ...tasks.filter((task) => !task.isHighlighted),
 ]
+
+export const fieldsForNextRepeat = (task: Task, nextDate: Date): Partial<Task> => ({
+  ...fieldsForDate(toISODateString(nextDate)),
+  labelIds: task.labelIds,
+  isHighlighted: task.isHighlighted,
+  repeat: task.repeat,
+})
