@@ -32,7 +32,7 @@ export const TaskItem = ({ task, onToggleCompleted, onOpen }: TaskItemProps) => 
         onClick={() => onOpen(task)}
         className={`min-w-0 flex-1 self-stretch py-3 text-left break-words ${isDone ? 'text-content-muted line-through' : ''}`}
       >
-        {task.title}
+        <span className={task.isHighlighted ? 'bg-marker' : ''}>{task.title}</span>
       </button>
     </li>
   )

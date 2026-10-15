@@ -39,3 +39,8 @@
 @utility pb-safe-* {
   padding-bottom: calc(env(safe-area-inset-bottom) + --spacing(--value(integer)));
 }
+
+@utility bg-marker {
+  background-image: linear-gradient(transparent 45%, var(--color-highlight) 45%, var(--color-highlight) 92%, transparent 92%);
+  box-decoration-break: clone;
+}

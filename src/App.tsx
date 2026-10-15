@@ -10,7 +10,7 @@ import { useTaskSheet } from './hooks/useTaskSheet.ts'
 import { createSomedayTab, createTodayTab, createUnsortedTab } from './models/tab.ts'
 
 export const App = () => {
-  const { tasks, addTask, toggleCompleted, renameTask } = useTaskActions()
+  const { tasks, addTask, toggleCompleted, renameTask, toggleHighlight } = useTaskActions()
   const { pagerRef, activeIndex, handleScroll, goTo } = useTabPager()
   const { sheetTask, isSheetOpen, openSheet, closeSheet } = useTaskSheet(tasks)
 
@@ -44,7 +44,12 @@ export const App = () => {
       <TaskInput onAdd={(title) => addTask(title, activeTab.fieldsForNewTask)} />
       <BottomSheet isOpen={isSheetOpen} onClose={closeSheet} label="タスクのシート">
         {sheetTask && (
-          <TaskSheet key={sheetTask.id} task={sheetTask} onRename={(title) => renameTask(sheetTask, title)} />
+          <TaskSheet
+            key={sheetTask.id}
+            task={sheetTask}
+            onRename={(title) => renameTask(sheetTask, title)}
+            onToggleHighlight={() => toggleHighlight(sheetTask)}
+          />
         )}
       </BottomSheet>
       <AppToaster />

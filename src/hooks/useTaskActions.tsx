@@ -23,6 +23,7 @@ export const useTaskActions = () => {
   }
 
   const renameTask = (task: Task, title: string) => updateTask(task.id, { title })
+  const toggleHighlight = (task: Task) => updateTask(task.id, { isHighlighted: !task.isHighlighted })
 
-  return { tasks, addTask, toggleCompleted, renameTask }
+  return { tasks, addTask, toggleCompleted, renameTask, toggleHighlight }
 }

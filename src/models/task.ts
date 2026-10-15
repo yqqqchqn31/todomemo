@@ -7,6 +7,7 @@ export type Task = {
   completedAt: number | null
   plannedDate: string | null
   isSomeday: boolean
+  isHighlighted: boolean
 }
 
 export type Destination = 'today' | 'someday' | 'unsorted'
@@ -15,6 +16,7 @@ const TASK_DEFAULTS = {
   completedAt: null,
   plannedDate: null,
   isSomeday: false,
+  isHighlighted: false,
 } satisfies Partial<Task>
 
 export const toDateKey = (date: Date) => format(date, 'yyyy-MM-dd')
