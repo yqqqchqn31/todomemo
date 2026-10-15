@@ -1,4 +1,5 @@
-import { getDestination, type Destination, type Task } from '../../models/task.ts'
+import { getPlacement, toDateKey, type Destination, type Task } from '../../models/task.ts'
+import { PlanDateField } from './PlanDateField.tsx'
 import { QuickActions } from './QuickActions.tsx'
 import { TitleField } from './TitleField.tsx'
 
@@ -7,18 +8,20 @@ type TaskSheetProps = {
   onRename: (title: string) => void
   onToggleHighlight: () => void
   onMove: (destination: Destination) => void
+  onSchedule: (date: Date) => void
   onDelete: () => void
 }
 
-export const TaskSheet = ({ task, onRename, onToggleHighlight, onMove, onDelete }: TaskSheetProps) => (
+export const TaskSheet = ({ task, onRename, onToggleHighlight, onMove, onSchedule, onDelete }: TaskSheetProps) => (
   <div className="flex flex-col gap-4 pb-2">
     <TitleField title={task.title} onRename={onRename} />
     <QuickActions
       isHighlighted={task.isHighlighted}
-      destination={getDestination(task)}
+      placement={getPlacement(task, toDateKey(new Date()))}
       onToggleHighlight={onToggleHighlight}
       onMove={onMove}
     />
+    <PlanDateField plannedDate={task.plannedDate} onSchedule={onSchedule} />
     <div className="flex items-center justify-between">
       <button type="button" onClick={onDelete} className="h-11 text-sm text-danger">
         削除

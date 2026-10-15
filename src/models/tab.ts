@@ -1,7 +1,6 @@
-import { format } from 'date-fns'
-import { ja } from 'date-fns/locale'
+import { formatMonthDayWeekday } from './dateFormat.ts'
 import {
-  fieldsForToday,
+  fieldsForDate,
   isCompleted,
   isSomedayTask,
   isTodayTask,
@@ -21,8 +20,6 @@ export type TaskTab = {
   fieldsForNewTask: Partial<Task>
 }
 
-const formatMonthDayWeekday = (date: Date) => format(date, 'M月d日(E)', { locale: ja })
-
 export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
   const todayKey = toDateKey(today)
 
@@ -31,7 +28,7 @@ export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
     label: '今日',
     caption: formatMonthDayWeekday(today),
     tasks: tasks.filter((task) => isTodayTask(task, todayKey)),
-    fieldsForNewTask: fieldsForToday(todayKey),
+    fieldsForNewTask: fieldsForDate(todayKey),
   }
 }
 

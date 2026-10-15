@@ -10,7 +10,8 @@ import { useTaskSheet } from './hooks/useTaskSheet.ts'
 import { createSomedayTab, createTodayTab, createUnsortedTab } from './models/tab.ts'
 
 export const App = () => {
-  const { tasks, addTask, toggleCompleted, renameTask, toggleHighlight, moveTask, deleteTask } = useTaskActions()
+  const { tasks, addTask, toggleCompleted, renameTask, toggleHighlight, moveTask, scheduleTask, deleteTask } =
+    useTaskActions()
   const { pagerRef, activeIndex, handleScroll, goTo } = useTabPager()
   const { sheetTask, isSheetOpen, openSheet, closeSheet } = useTaskSheet(tasks)
 
@@ -51,6 +52,10 @@ export const App = () => {
             onToggleHighlight={() => toggleHighlight(sheetTask)}
             onMove={(destination) => {
               moveTask(sheetTask, destination)
+              closeSheet()
+            }}
+            onSchedule={(date) => {
+              scheduleTask(sheetTask, date)
               closeSheet()
             }}
             onDelete={() => {

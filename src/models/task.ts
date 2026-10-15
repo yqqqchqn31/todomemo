@@ -11,6 +11,7 @@ export type Task = {
 }
 
 export type Destination = 'today' | 'someday' | 'unsorted'
+export type Placement = Destination | 'scheduled'
 
 const TASK_DEFAULTS = {
   completedAt: null,
@@ -37,18 +38,19 @@ export const isCompletedToday = (task: Task) => task.completedAt !== null && isT
 
 const isOpenOrCompletedToday = (task: Task) => !isCompleted(task) || isCompletedToday(task)
 
-export const getDestination = (task: Task): Destination => {
+export const getPlacement = (task: Task, todayKey: string): Placement => {
+  if (task.plannedDate !== null && task.plannedDate > todayKey) return 'scheduled'
   if (task.plannedDate !== null) return 'today'
   if (task.isSomeday) return 'someday'
   return 'unsorted'
 }
 
-export const fieldsForToday = (todayKey: string): Partial<Task> => ({ plannedDate: todayKey, isSomeday: false })
+export const fieldsForDate = (dateKey: string): Partial<Task> => ({ plannedDate: dateKey, isSomeday: false })
 export const SOMEDAY_FIELDS: Partial<Task> = { plannedDate: null, isSomeday: true }
 export const UNSORTED_FIELDS: Partial<Task> = { plannedDate: null, isSomeday: false }
 
 export const fieldsForDestination = (destination: Destination, todayKey: string) => {
-  if (destination === 'today') return fieldsForToday(todayKey)
+  if (destination === 'today') return fieldsForDate(todayKey)
   if (destination === 'someday') return SOMEDAY_FIELDS
   return UNSORTED_FIELDS
 }
@@ -56,6 +58,8 @@ export const fieldsForDestination = (destination: Destination, todayKey: string)
 export const isTodayTask = (task: Task, todayKey: string) =>
   task.plannedDate !== null && task.plannedDate <= todayKey && isOpenOrCompletedToday(task)
 
-export const isSomedayTask = (task: Task) => getDestination(task) === 'someday' && isOpenOrCompletedToday(task)
+export const isSomedayTask = (task: Task) =>
+  task.plannedDate === null && task.isSomeday && isOpenOrCompletedToday(task)
 
-export const isUnsortedTask = (task: Task) => getDestination(task) === 'unsorted' && isOpenOrCompletedToday(task)
+export const isUnsortedTask = (task: Task) =>
+  task.plannedDate === null && !task.isSomeday && isOpenOrCompletedToday(task)

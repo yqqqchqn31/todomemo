@@ -1,6 +1,14 @@
 import { toast } from 'sonner'
 import { TaskToastMessage } from '../components/TaskToastMessage.tsx'
-import { fieldsForDestination, isCompleted, toDateKey, type Destination, type Task } from '../models/task.ts'
+import { formatMonthDayWeekday } from '../models/dateFormat.ts'
+import {
+  fieldsForDate,
+  fieldsForDestination,
+  isCompleted,
+  toDateKey,
+  type Destination,
+  type Task,
+} from '../models/task.ts'
 import { useTasks } from './useTasks.ts'
 
 const MOVED_RESULT: Record<Destination, string> = {
@@ -31,11 +39,17 @@ export const useTaskActions = () => {
   const renameTask = (task: Task, title: string) => updateTaskById(task.id, { title })
   const toggleHighlight = (task: Task) => updateTaskById(task.id, { isHighlighted: !task.isHighlighted })
 
-  const moveTask = (task: Task, destination: Destination) => {
+  const relocateTask = (task: Task, fields: Partial<Task>, result: string) => {
     const previousFields = { plannedDate: task.plannedDate, isSomeday: task.isSomeday }
-    updateTaskById(task.id, fieldsForDestination(destination, toDateKey(new Date())))
-    showTaskToast(task, MOVED_RESULT[destination], () => updateTaskById(task.id, previousFields))
+    updateTaskById(task.id, fields)
+    showTaskToast(task, result, () => updateTaskById(task.id, previousFields))
   }
+
+  const moveTask = (task: Task, destination: Destination) =>
+    relocateTask(task, fieldsForDestination(destination, toDateKey(new Date())), MOVED_RESULT[destination])
+
+  const scheduleTask = (task: Task, date: Date) =>
+    relocateTask(task, fieldsForDate(toDateKey(date)), `を${formatMonthDayWeekday(date)}に移しました`)
 
   const deleteTask = (task: Task) => {
     const index = tasks.findIndex(({ id }) => id === task.id)
@@ -43,5 +57,5 @@ export const useTaskActions = () => {
     showTaskToast(task, 'を削除しました', () => restoreTask(task, index))
   }
 
-  return { tasks, addTask, toggleCompleted, renameTask, toggleHighlight, moveTask, deleteTask }
+  return { tasks, addTask, toggleCompleted, renameTask, toggleHighlight, moveTask, scheduleTask, deleteTask }
 }

@@ -1,9 +1,9 @@
-import type { Destination } from '../../models/task.ts'
+import type { Destination, Placement } from '../../models/task.ts'
 import { HighlighterIcon } from '../icons/HighlighterIcon.tsx'
 
 type QuickActionsProps = {
   isHighlighted: boolean
-  destination: Destination
+  placement: Placement
   onToggleHighlight: () => void
   onMove: (destination: Destination) => void
 }
@@ -16,7 +16,7 @@ const DESTINATION_BUTTONS = [
   { destination: 'someday', label: 'いつか', hint: '急がない' },
 ] as const
 
-export const QuickActions = ({ isHighlighted, destination, onToggleHighlight, onMove }: QuickActionsProps) => (
+export const QuickActions = ({ isHighlighted, placement, onToggleHighlight, onMove }: QuickActionsProps) => (
   <section>
     <h2 className="mb-2 text-xs text-content-muted">すぐできること</h2>
     <div className="grid grid-cols-3 gap-2">
@@ -31,7 +31,7 @@ export const QuickActions = ({ isHighlighted, destination, onToggleHighlight, on
         <small className="text-xs font-normal text-content-muted">忘れちゃダメ</small>
       </button>
       {DESTINATION_BUTTONS.map((button) => {
-        const isCurrent = button.destination === destination
+        const isCurrent = button.destination === placement
 
         return (
           <button
@@ -47,7 +47,7 @@ export const QuickActions = ({ isHighlighted, destination, onToggleHighlight, on
         )
       })}
     </div>
-    {destination !== 'unsorted' && (
+    {placement !== 'unsorted' && (
       <button type="button" onClick={() => onMove('unsorted')} className="mt-1 h-11 text-sm text-content-muted underline">
         未整理に戻す
       </button>
