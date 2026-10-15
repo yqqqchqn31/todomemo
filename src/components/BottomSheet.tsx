@@ -13,7 +13,7 @@ const SLIDE_EASING = 'cubic-bezier(0.2, 0.8, 0.2, 1)'
 
 // Safari の ::backdrop は CSS 変数を読めないので、背景の色は content の値を直接書く
 const DIALOG_CLASS =
-  'mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-lg overflow-y-auto overscroll-contain rounded-t-2xl bg-surface-raised px-5 pt-2.5 pb-safe-6 text-content backdrop:bg-[rgb(43_42_39/0.35)]'
+  'mx-auto mt-auto mb-0 max-h-[85dvh] w-full max-w-lg overflow-y-auto overscroll-contain rounded-t-2xl bg-surface-raised px-5 pt-2.5 pb-safe-6 text-content outline-none backdrop:bg-[rgb(43_42_39/0.35)]'
 
 const slideDuration = () => (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : SLIDE_MS)
 
@@ -55,6 +55,8 @@ export const BottomSheet = ({ isOpen, onClose, label, children }: BottomSheetPro
 
     isClosingRef.current = false
     dialog.showModal()
+    // ハンドルにフォーカスの枠が出ないよう、シート全体にフォーカスを置く
+    dialog.focus()
     dialog.scrollTop = 0
     void slide(dialog, 'translateY(100%)', 'none')
   }, [isOpen])
@@ -130,6 +132,7 @@ export const BottomSheet = ({ isOpen, onClose, label, children }: BottomSheetPro
     <dialog
       ref={dialogRef}
       aria-label={label}
+      tabIndex={-1}
       onClose={onClose}
       onClick={closeIfBackdropClicked}
       className={DIALOG_CLASS}
@@ -137,7 +140,6 @@ export const BottomSheet = ({ isOpen, onClose, label, children }: BottomSheetPro
       <button
         type="button"
         aria-label="閉じる"
-        autoFocus
         onClick={() => void slideOutAndClose()}
         className="mx-auto mb-1 flex h-6 w-16 items-start justify-center"
       >
