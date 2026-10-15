@@ -26,6 +26,7 @@ export type TaskTab = {
   caption: string
   sections: TaskSection[]
   upcomingCount: number | null
+  labelId: string | null
   fieldsForNewTask: Partial<Task>
 }
 
@@ -38,6 +39,7 @@ export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
     caption: formatMonthDayWeekday(today),
     sections: [{ tasks: tasks.filter((task) => isTodayTask(task, todayString)) }],
     upcomingCount: tasks.filter((task) => isUpcomingTask(task, todayString)).length,
+    labelId: null,
     fieldsForNewTask: fieldsForDate(todayString),
   }
 }
@@ -48,6 +50,7 @@ export const createSomedayTab = (tasks: Task[]): TaskTab => ({
   caption: '急がないもの',
   sections: [{ tasks: tasks.filter(isSomedayTask) }],
   upcomingCount: null,
+  labelId: null,
   fieldsForNewTask: SOMEDAY_FIELDS,
 })
 
@@ -76,6 +79,7 @@ export const createAllTab = (tasks: Task[], labels: Label[], today: Date): TaskT
     caption: 'ぜんぶここにあります',
     sections: sections.filter((section) => section.tasks.length > 0),
     upcomingCount: null,
+    labelId: null,
     fieldsForNewTask: UNSORTED_FIELDS,
   }
 }
@@ -86,5 +90,6 @@ export const createLabelTab = (tasks: Task[], label: Label): TaskTab => ({
   caption: 'ラベル',
   sections: [{ tasks: tasks.filter((task) => isLabelTask(task, label.id)) }],
   upcomingCount: null,
+  labelId: label.id,
   fieldsForNewTask: { ...UNSORTED_FIELDS, labelIds: [label.id] },
 })

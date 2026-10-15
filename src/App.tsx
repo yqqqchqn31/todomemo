@@ -66,7 +66,12 @@ export const App = () => {
             aria-labelledby={`tab-${tab.id}`}
             className="w-full flex-none snap-start overflow-y-auto px-5 pt-2 pb-safe-24"
           >
-            <TaskSections sections={tab.sections} onToggleCompleted={toggleCompleted} onOpen={openSheet} />
+            <TaskSections
+              sections={tab.sections}
+              labels={labels.filter((label) => label.id !== tab.labelId)}
+              onToggleCompleted={toggleCompleted}
+              onOpen={openSheet}
+            />
             {tab.upcomingCount != null && (
               <UpcomingLink count={tab.upcomingCount} onClick={() => goTo(allTabIndex)} />
             )}
