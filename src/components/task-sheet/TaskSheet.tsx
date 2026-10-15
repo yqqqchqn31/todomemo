@@ -1,10 +1,12 @@
 import type { Label } from '../../models/label.ts'
+import type { RepeatRule } from '../../models/repeat.ts'
 import { getPlacement, toISODateString, type Destination, type Task } from '../../models/task.ts'
 import { DueDateField } from './DueDateField.tsx'
 import { LabelField } from './LabelField.tsx'
 import { MoreDetails } from './MoreDetails.tsx'
 import { PlanDateField } from './PlanDateField.tsx'
 import { QuickActions } from './QuickActions.tsx'
+import { RepeatField } from './RepeatField.tsx'
 import { TitleField } from './TitleField.tsx'
 
 type TaskSheetProps = {
@@ -15,6 +17,7 @@ type TaskSheetProps = {
   onMove: (destination: Destination) => void
   onSchedule: (date: Date) => void
   onChangeDueDate: (dueDate: string | null) => void
+  onChangeRepeat: (repeat: RepeatRule | null) => void
   onToggleLabel: (labelId: string) => void
   onCreateLabel: (name: string) => void
   onDelete: () => void
@@ -28,6 +31,7 @@ export const TaskSheet = ({
   onMove,
   onSchedule,
   onChangeDueDate,
+  onChangeRepeat,
   onToggleLabel,
   onCreateLabel,
   onDelete,
@@ -42,8 +46,9 @@ export const TaskSheet = ({
     />
     <PlanDateField plannedDate={task.plannedDate} onSchedule={onSchedule} />
     <LabelField labels={labels} selectedIds={task.labelIds} onToggle={onToggleLabel} onCreate={onCreateLabel} />
-    <MoreDetails isInitiallyOpen={task.dueDate != null}>
+    <MoreDetails isInitiallyOpen={task.dueDate != null || task.repeat != null}>
       <DueDateField dueDate={task.dueDate} onChangeDueDate={onChangeDueDate} />
+      <RepeatField repeat={task.repeat} onChangeRepeat={onChangeRepeat} />
     </MoreDetails>
     <div className="flex items-center justify-between">
       <button type="button" onClick={onDelete} className="h-11 text-sm text-danger">

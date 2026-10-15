@@ -1,6 +1,7 @@
 import { toast } from 'sonner'
 import { TaskToastMessage } from '../components/TaskToastMessage.tsx'
 import { formatShortDate } from '../models/dateFormat.ts'
+import type { RepeatRule } from '../models/repeat.ts'
 import {
   fieldsForDate,
   fieldsForDestination,
@@ -44,6 +45,15 @@ export const useTaskActions = () => {
   const toggleHighlight = (task: Task) => updateTaskById(task.id, { isHighlighted: !task.isHighlighted })
 
   const changeDueDate = (task: Task, dueDate: string | null) => updateTaskById(task.id, { dueDate })
+
+  const changeRepeat = (task: Task, repeat: RepeatRule | null) => {
+    if (repeat != null && task.plannedDate == null) {
+      updateTaskById(task.id, { repeat, ...fieldsForDate(toISODateString(new Date())) })
+      return
+    }
+
+    updateTaskById(task.id, { repeat })
+  }
 
   const attachLabel = (task: Task, labelId: string) => {
     if (task.labelIds.includes(labelId)) return
@@ -93,6 +103,7 @@ export const useTaskActions = () => {
     renameTask,
     toggleHighlight,
     changeDueDate,
+    changeRepeat,
     attachLabel,
     toggleLabel,
     moveTask,

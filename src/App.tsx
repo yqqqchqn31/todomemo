@@ -21,6 +21,7 @@ export const App = () => {
     renameTask,
     toggleHighlight,
     changeDueDate,
+    changeRepeat,
     attachLabel,
     toggleLabel,
     moveTask,
@@ -103,6 +104,7 @@ export const App = () => {
               closeSheet()
             }}
             onChangeDueDate={(dueDate) => changeDueDate(sheetTask, dueDate)}
+            onChangeRepeat={(repeat) => changeRepeat(sheetTask, repeat)}
             onToggleLabel={(labelId) => toggleLabel(sheetTask, labelId)}
             onCreateLabel={(name) => attachLabel(sheetTask, addLabel(name).id)}
             onDelete={() => {

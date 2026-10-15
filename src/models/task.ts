@@ -1,4 +1,5 @@
 import { format, isToday } from 'date-fns'
+import type { RepeatRule } from './repeat.ts'
 
 export type Task = {
   id: string
@@ -8,6 +9,7 @@ export type Task = {
   plannedDate: string | null
   dueDate: string | null
   labelIds: string[]
+  repeat: RepeatRule | null
   isSomeday: boolean
   isHighlighted: boolean
 }
@@ -20,6 +22,7 @@ const TASK_DEFAULTS = {
   plannedDate: null,
   dueDate: null,
   labelIds: [],
+  repeat: null,
   isSomeday: false,
   isHighlighted: false,
 } satisfies Partial<Task>
