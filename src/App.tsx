@@ -2,13 +2,13 @@ import { AppToaster } from './components/AppToaster.tsx'
 import { BottomSheet } from './components/BottomSheet.tsx'
 import { TabBar } from './components/TabBar.tsx'
 import { TaskInput } from './components/TaskInput.tsx'
-import { TaskList } from './components/TaskList.tsx'
+import { TaskSections } from './components/TaskSections.tsx'
 import { UpcomingTasks } from './components/UpcomingTasks.tsx'
 import { TaskSheet } from './components/task-sheet/TaskSheet.tsx'
 import { useTabPager } from './hooks/useTabPager.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
 import { useTaskSheet } from './hooks/useTaskSheet.ts'
-import { createSomedayTab, createTodayTab, createUnsortedTab } from './models/tab.ts'
+import { createAllTab, createSomedayTab, createTodayTab, createUnsortedTab } from './models/tab.ts'
 
 export const App = () => {
   const {
@@ -25,7 +25,13 @@ export const App = () => {
   const { pagerRef, activeIndex, handleScroll, goTo } = useTabPager()
   const { sheetTask, isSheetOpen, openSheet, closeSheet } = useTaskSheet(tasks)
 
-  const tabs = [createTodayTab(tasks, new Date()), createUnsortedTab(tasks), createSomedayTab(tasks)]
+  const today = new Date()
+  const tabs = [
+    createTodayTab(tasks, today),
+    createUnsortedTab(tasks),
+    createSomedayTab(tasks),
+    createAllTab(tasks, today),
+  ]
   const activeTab = tabs[activeIndex]
 
   return (
@@ -48,7 +54,7 @@ export const App = () => {
             aria-labelledby={`tab-${tab.id}`}
             className="w-full flex-none snap-start overflow-y-auto px-5 pt-2 pb-safe-24"
           >
-            <TaskList tasks={tab.tasks} onToggleCompleted={toggleCompleted} onOpen={openSheet} />
+            <TaskSections sections={tab.sections} onToggleCompleted={toggleCompleted} onOpen={openSheet} />
             {tab.upcomingTasks && (
               <UpcomingTasks tasks={tab.upcomingTasks} onToggleCompleted={toggleCompleted} onOpen={openSheet} />
             )}

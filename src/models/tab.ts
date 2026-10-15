@@ -1,6 +1,7 @@
-import { formatMonthDayWeekday } from './dateFormat.ts'
+import { formatDayLabel, formatMonthDayWeekday } from './dateFormat.ts'
 import {
   fieldsForDate,
+  groupByPlannedDate,
   isCompleted,
   isSomedayTask,
   isTodayTask,
@@ -12,12 +13,17 @@ import {
   type Task,
 } from './task.ts'
 
+export type TaskSection = {
+  title?: string
+  tasks: Task[]
+}
+
 export type TaskTab = {
   id: string
   label: string
   caption: string
   count?: number
-  tasks: Task[]
+  sections: TaskSection[]
   upcomingTasks?: Task[]
   fieldsForNewTask: Partial<Task>
 }
@@ -29,7 +35,7 @@ export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
     id: 'today',
     label: '今日',
     caption: formatMonthDayWeekday(today),
-    tasks: tasks.filter((task) => isTodayTask(task, todayString)),
+    sections: [{ tasks: tasks.filter((task) => isTodayTask(task, todayString)) }],
     upcomingTasks: tasks.filter((task) => isUpcomingTask(task, todayString)),
     fieldsForNewTask: fieldsForDate(todayString),
   }
@@ -43,7 +49,7 @@ export const createUnsortedTab = (tasks: Task[]): TaskTab => {
     label: '未整理',
     caption: '書きっぱなしでOK',
     count: unsortedTasks.filter((task) => !isCompleted(task)).length,
-    tasks: unsortedTasks,
+    sections: [{ tasks: unsortedTasks }],
     fieldsForNewTask: UNSORTED_FIELDS,
   }
 }
@@ -52,6 +58,29 @@ export const createSomedayTab = (tasks: Task[]): TaskTab => ({
   id: 'someday',
   label: 'いつか',
   caption: '急がないもの',
-  tasks: tasks.filter(isSomedayTask),
+  sections: [{ tasks: tasks.filter(isSomedayTask) }],
   fieldsForNewTask: SOMEDAY_FIELDS,
 })
+
+export const createAllTab = (tasks: Task[], today: Date): TaskTab => {
+  const todayString = toISODateString(today)
+  const upcomingTasks = tasks.filter((task) => isUpcomingTask(task, todayString))
+  const upcomingSections = groupByPlannedDate(upcomingTasks).map((group) => ({
+    title: formatDayLabel(group.dateString),
+    tasks: group.tasks,
+  }))
+  const sections = [
+    { title: '今日', tasks: tasks.filter((task) => isTodayTask(task, todayString)) },
+    ...upcomingSections,
+    { title: '未整理', tasks: tasks.filter(isUnsortedTask) },
+    { title: 'いつか', tasks: tasks.filter(isSomedayTask) },
+  ]
+
+  return {
+    id: 'all',
+    label: 'すべて',
+    caption: 'ぜんぶここにあります',
+    sections: sections.filter((section) => section.tasks.length > 0),
+    fieldsForNewTask: UNSORTED_FIELDS,
+  }
+}

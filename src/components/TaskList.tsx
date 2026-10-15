@@ -8,10 +8,6 @@ type TaskListProps = {
 }
 
 export const TaskList = ({ tasks, onToggleCompleted, onOpen }: TaskListProps) => {
-  if (tasks.length === 0) {
-    return <p className="text-sm text-content-muted">まだ何もありません。下の欄に書いてみてください。</p>
-  }
-
   const openTasks = tasks.filter((task) => !isCompleted(task))
   const completedTasks = tasks.filter(isCompleted)
 
