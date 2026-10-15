@@ -7,9 +7,10 @@ type TaskSheetProps = {
   onRename: (title: string) => void
   onToggleHighlight: () => void
   onMove: (destination: Destination) => void
+  onDelete: () => void
 }
 
-export const TaskSheet = ({ task, onRename, onToggleHighlight, onMove }: TaskSheetProps) => (
+export const TaskSheet = ({ task, onRename, onToggleHighlight, onMove, onDelete }: TaskSheetProps) => (
   <div className="flex flex-col gap-4 pb-2">
     <TitleField title={task.title} onRename={onRename} />
     <QuickActions
@@ -18,6 +19,11 @@ export const TaskSheet = ({ task, onRename, onToggleHighlight, onMove }: TaskShe
       onToggleHighlight={onToggleHighlight}
       onMove={onMove}
     />
-    <p className="text-right text-xs text-content-muted">変更は自動で保存</p>
+    <div className="flex items-center justify-between">
+      <button type="button" onClick={onDelete} className="h-11 text-sm text-danger">
+        削除
+      </button>
+      <p className="text-xs text-content-muted">変更は自動で保存</p>
+    </div>
   </div>
 )

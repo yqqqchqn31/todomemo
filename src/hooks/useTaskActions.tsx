@@ -16,7 +16,7 @@ const showTaskToast = (task: Task, result: string, undo: () => void) => {
 }
 
 export const useTaskActions = () => {
-  const { tasks, addTask, updateTask, completeTask, reopenTask } = useTasks()
+  const { tasks, addTask, updateTask, removeTaskById, restoreTask, completeTask, reopenTask } = useTasks()
 
   const toggleCompleted = (task: Task) => {
     if (isCompleted(task)) {
@@ -37,5 +37,11 @@ export const useTaskActions = () => {
     showTaskToast(task, MOVED_RESULT[destination], () => updateTask(task.id, previousFields))
   }
 
-  return { tasks, addTask, toggleCompleted, renameTask, toggleHighlight, moveTask }
+  const deleteTask = (task: Task) => {
+    const index = tasks.findIndex(({ id }) => id === task.id)
+    removeTaskById(task.id)
+    showTaskToast(task, 'を削除しました', () => restoreTask(task, index))
+  }
+
+  return { tasks, addTask, toggleCompleted, renameTask, toggleHighlight, moveTask, deleteTask }
 }

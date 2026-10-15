@@ -17,8 +17,16 @@ export const useTasks = () => {
     setTasks((currentTasks) => updateTaskById(currentTasks, id, changes))
   }
 
+  const removeTaskById = (id: string) => {
+    setTasks((currentTasks) => currentTasks.filter((task) => task.id !== id))
+  }
+
+  const restoreTask = (task: Task, index: number) => {
+    setTasks((currentTasks) => [...currentTasks.slice(0, index), task, ...currentTasks.slice(index)])
+  }
+
   const completeTask = (id: string) => updateTask(id, { completedAt: Date.now() })
   const reopenTask = (id: string) => updateTask(id, { completedAt: null })
 
-  return { tasks, addTask, updateTask, completeTask, reopenTask }
+  return { tasks, addTask, updateTask, removeTaskById, restoreTask, completeTask, reopenTask }
 }
