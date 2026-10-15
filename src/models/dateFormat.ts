@@ -3,6 +3,8 @@ import { ja } from 'date-fns/locale'
 
 export const formatMonthDayWeekday = (date: Date) => format(date, 'M月d日(E)', { locale: ja })
 
+export const formatSlashDate = (date: Date) => format(date, 'M/d')
+
 export const formatShortDate = (date: Date) => format(date, 'M/d(E)', { locale: ja })
 
 export const formatDayLabel = (dateString: string) => {

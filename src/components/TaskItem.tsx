@@ -1,4 +1,5 @@
 import { isCompleted, type Task } from '../models/task.ts'
+import { DueDateLabel } from './DueDateLabel.tsx'
 import { CheckIcon } from './icons/CheckIcon.tsx'
 
 type TaskItemProps = {
@@ -34,6 +35,7 @@ export const TaskItem = ({ task, onToggleCompleted, onOpen }: TaskItemProps) => 
       >
         <span className={task.isHighlighted ? 'bg-marker' : ''}>{task.title}</span>
       </button>
+      {task.dueDate !== null && !isDone && <DueDateLabel dueDate={task.dueDate} />}
     </li>
   )
 }
