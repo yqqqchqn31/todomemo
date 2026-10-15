@@ -3,7 +3,7 @@ import { BottomSheet } from './components/BottomSheet.tsx'
 import { TabBar } from './components/TabBar.tsx'
 import { TaskInput } from './components/TaskInput.tsx'
 import { TaskSections } from './components/TaskSections.tsx'
-import { UpcomingTasks } from './components/UpcomingTasks.tsx'
+import { UpcomingLink } from './components/UpcomingLink.tsx'
 import { TaskSheet } from './components/task-sheet/TaskSheet.tsx'
 import { useTabPager } from './hooks/useTabPager.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
@@ -33,6 +33,7 @@ export const App = () => {
     createAllTab(tasks, today),
   ]
   const activeTab = tabs[activeIndex]
+  const allTabIndex = tabs.findIndex((tab) => tab.id === 'all')
 
   return (
     <div className="mx-auto flex h-dvh max-w-lg flex-col">
@@ -55,8 +56,8 @@ export const App = () => {
             className="w-full flex-none snap-start overflow-y-auto px-5 pt-2 pb-safe-24"
           >
             <TaskSections sections={tab.sections} onToggleCompleted={toggleCompleted} onOpen={openSheet} />
-            {tab.upcomingTasks && (
-              <UpcomingTasks tasks={tab.upcomingTasks} onToggleCompleted={toggleCompleted} onOpen={openSheet} />
+            {tab.upcomingCount != null && (
+              <UpcomingLink count={tab.upcomingCount} onClick={() => goTo(allTabIndex)} />
             )}
           </section>
         ))}
