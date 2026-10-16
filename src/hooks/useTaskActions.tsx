@@ -98,7 +98,7 @@ export const useTaskActions = () => {
 
     const undo = () =>
       targetTasks.forEach((task) => updateTaskById(task.id, { plannedDate: task.plannedDate, isSomeday: task.isSomeday }))
-    showUndoToast(`${targetTasks.length}件${MOVED_RESULT[destination]}`, undo)
+    showUndoToast(`${targetTasks.length}こ${MOVED_RESULT[destination]}`, undo)
   }
 
   const deleteTask = (task: Task) => {

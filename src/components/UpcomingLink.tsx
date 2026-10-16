@@ -8,7 +8,7 @@ export const UpcomingLink = ({ count, onClick }: UpcomingLinkProps) => {
 
   return (
     <button type="button" onClick={onClick} className="mt-4 flex min-h-11 items-center text-sm text-content-muted">
-      明日以降 {count}件 ›
+      明日以降 {count}こ ›
     </button>
   )
 }
