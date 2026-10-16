@@ -22,7 +22,7 @@ export type TaskSection = {
   tasks: Task[]
 }
 
-export type TaskTab = {
+type TaskTab = {
   id: string
   label: string
   caption: string

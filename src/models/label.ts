@@ -1,4 +1,4 @@
-export const LABEL_COLORS = ['purple', 'green', 'blue', 'orange', 'pink', 'teal'] as const
+const LABEL_COLORS = ['purple', 'green', 'blue', 'orange', 'pink', 'teal'] as const
 
 export type LabelColor = (typeof LABEL_COLORS)[number]
 

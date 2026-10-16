@@ -1,9 +1,9 @@
 import { differenceInCalendarDays, parseISO } from 'date-fns'
 import { formatSlashDate } from './dateFormat.ts'
 
-export const DUE_DATE_SOON_DAYS = 3
+const DUE_DATE_SOON_DAYS = 3
 
-export type DueDateText = {
+type DueDateText = {
   main: string
   sub?: string
   isOverdue: boolean

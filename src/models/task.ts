@@ -41,7 +41,7 @@ export const fillMissingFields = (savedTask: Task): Task => ({ ...TASK_DEFAULTS,
 
 export const isCompleted = (task: Task) => task.completedAt !== null
 
-export const isCompletedToday = (task: Task) => task.completedAt !== null && isToday(task.completedAt)
+const isCompletedToday = (task: Task) => task.completedAt !== null && isToday(task.completedAt)
 
 const isOpenOrCompletedToday = (task: Task) => !isCompleted(task) || isCompletedToday(task)
 
