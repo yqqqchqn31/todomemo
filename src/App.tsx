@@ -20,7 +20,14 @@ import { useToday } from './hooks/useToday.ts'
 import { useVisibleViewport } from './hooks/useVisibleViewport.ts'
 import { useTaskActions } from './hooks/useTaskActions.tsx'
 import { useTaskSheet } from './hooks/useTaskSheet.ts'
-import { createAllTab, createLabelTab, createSomedayTab, createTodayTab, isTabEmpty } from './models/tab.ts'
+import {
+  createAllTab,
+  createLabelTab,
+  createSomedayTab,
+  createTodayTab,
+  isTabAllDone,
+  isTabEmpty,
+} from './models/tab.ts'
 import { createSampleData } from './models/sample.ts'
 import { isSortTarget } from './models/task.ts'
 
@@ -118,6 +125,9 @@ export const App = () => {
                 isMascotShown={tab.id === 'today'}
                 onLoadSample={tab.id === 'today' && isBrandNew ? loadSample : undefined}
               />
+            )}
+            {tab.id === 'today' && isTabAllDone(tab) && (
+              <EmptyState message="今日のぶん、ぜんぶおわり！" hint="おつかれさま。あとはごろごろ〜" isMascotShown />
             )}
             <TaskSections
               sections={tab.sections}

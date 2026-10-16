@@ -3,6 +3,7 @@ import type { Label } from './label.ts'
 import {
   fieldsForDate,
   groupByPlannedDate,
+  isCompleted,
   isLabelOnlyTask,
   isLabelTask,
   isLeftoverTask,
@@ -126,3 +127,8 @@ export const isTabEmpty = (tab: TaskTab) =>
   tab.leftoverTasks.length === 0 &&
   tab.sleepingTasks.length === 0 &&
   tab.sections.every((section) => section.tasks.length === 0)
+
+export const isTabAllDone = (tab: TaskTab) =>
+  tab.leftoverTasks.length === 0 &&
+  tab.sections.some((section) => section.tasks.length > 0) &&
+  tab.sections.every((section) => section.tasks.every(isCompleted))
