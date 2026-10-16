@@ -18,6 +18,7 @@ import {
 } from './task.ts'
 
 export type TaskSection = {
+  id: string
   title?: string
   tasks: Task[]
 }
@@ -42,7 +43,7 @@ export const createTodayTab = (tasks: Task[], today: Date): TaskTab => {
     id: 'today',
     label: '今日',
     caption: formatMonthDayWeekday(today),
-    sections: [{ tasks: tasks.filter((task) => isTodayTask(task, todayString)) }],
+    sections: [{ id: 'today', tasks: tasks.filter((task) => isTodayTask(task, todayString)) }],
     upcomingCount: tasks.filter((task) => isUpcomingTask(task, todayString)).length,
     labelId: null,
     leftoverTasks: tasks.filter((task) => isLeftoverTask(task, todayString)),
@@ -56,7 +57,7 @@ export const createSomedayTab = (tasks: Task[]): TaskTab => ({
   id: 'someday',
   label: 'いつか',
   caption: '急がないもの',
-  sections: [{ tasks: tasks.filter(isSomedayTask) }],
+  sections: [{ id: 'someday', tasks: tasks.filter(isSomedayTask) }],
   upcomingCount: null,
   labelId: null,
   leftoverTasks: [],
@@ -69,22 +70,29 @@ export const createAllTab = (tasks: Task[], labels: Label[], today: Date): TaskT
   const todayString = toISODateString(today)
   const upcomingTasks = tasks.filter((task) => isUpcomingTask(task, todayString))
   const upcomingSections = groupByPlannedDate(upcomingTasks).map((group) => ({
+    id: `date-${group.dateString}`,
     title: formatDayLabel(group.dateString),
     tasks: group.tasks,
   }))
   const labelSections = labels.map((label) => ({
+    id: `label-${label.id}`,
     title: label.name,
     tasks: tasks.filter((task) => isLabelOnlyTask(task, label.id)),
   }))
   const sections = [
-    { title: 'とりあえず', tasks: tasks.filter((task) => isUnsortedTask(task) && !isSleepingTask(task, today)) },
     {
+      id: 'unsorted',
+      title: 'とりあえず',
+      tasks: tasks.filter((task) => isUnsortedTask(task) && !isSleepingTask(task, today)),
+    },
+    {
+      id: 'today',
       title: '今日',
       tasks: tasks.filter((task) => isLeftoverTask(task, todayString) || isTodayTask(task, todayString)),
     },
     ...upcomingSections,
     ...labelSections,
-    { title: 'いつか', tasks: tasks.filter(isSomedayTask) },
+    { id: 'someday', title: 'いつか', tasks: tasks.filter(isSomedayTask) },
   ]
 
   return {
@@ -105,7 +113,7 @@ export const createLabelTab = (tasks: Task[], label: Label): TaskTab => ({
   id: `label-${label.id}`,
   label: label.name,
   caption: 'ラベル',
-  sections: [{ tasks: tasks.filter((task) => isLabelTask(task, label.id)) }],
+  sections: [{ id: 'label', tasks: tasks.filter((task) => isLabelTask(task, label.id)) }],
   upcomingCount: null,
   labelId: label.id,
   leftoverTasks: [],

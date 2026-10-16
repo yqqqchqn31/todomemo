@@ -11,8 +11,8 @@ type TaskSectionsProps = {
 }
 
 export const TaskSections = ({ sections, labels, onToggleCompleted, onOpen }: TaskSectionsProps) =>
-  sections.map((section, index) => (
-    <section key={section.title ?? index}>
+  sections.map((section) => (
+    <section key={section.id}>
       {section.title && <h2 className="mt-4 text-xs text-content-muted">{section.title}</h2>}
       <TaskList tasks={section.tasks} labels={labels} onToggleCompleted={onToggleCompleted} onOpen={onOpen} />
     </section>
