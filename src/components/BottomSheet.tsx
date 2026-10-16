@@ -32,7 +32,10 @@ export const BottomSheet = ({ isOpen, onClose, label, children }: BottomSheetPro
   const dialogRef = useRef<HTMLDialogElement>(null)
   const isClosingRef = useRef(false)
   const onCloseRef = useRef(onClose)
-  onCloseRef.current = onClose
+
+  useEffect(() => {
+    onCloseRef.current = onClose
+  })
 
   const slideOutAndClose = async (fromY = 0) => {
     const dialog = dialogRef.current
@@ -133,7 +136,10 @@ export const BottomSheet = ({ isOpen, onClose, label, children }: BottomSheetPro
       ref={dialogRef}
       aria-label={label}
       tabIndex={-1}
-      onClose={onClose}
+      onClose={() => {
+        // 親が閉じたあとの dialog.close() でも close が届くので、開いているときだけ伝える
+        if (isOpen) onClose()
+      }}
       onClick={closeIfBackdropClicked}
       className={DIALOG_CLASS}
     >
